@@ -6,7 +6,6 @@ Function Get-SystemSpecifications()
     $OS = Get-OS;
     $Kernel = Get-Kernel;
     $Uptime = Get-Uptime;
-    $WM = Get-WM;
     $Shell = Get-Shell;
     $Motherboard = Get-Mobo;
     $CPU = Get-CPU;
@@ -21,7 +20,6 @@ Function Get-SystemSpecifications()
         $OS, 
         $Kernel,
         $Uptime,
-        $WM,
         $Shell,
         $Motherboard,
         $CPU,
@@ -44,13 +42,12 @@ Function Get-LineToTitleMappings()
         1 = "OS: "; 
         2 = "Kernel: ";
         3 = "Uptime: ";
-        4 = "Window Manager: ";
-        5 = "Shell: ";
-        6 = "Motherboard: ";
-        7 = "CPU: ";
-        8 = "GPU: ";
-        9 = "Display: ";
-        10 = "Memory: ";
+        4 = "Shell: ";
+        5 = "Motherboard: ";
+        6 = "CPU: ";
+        7 = "GPU: ";
+        8 = "Display: ";
+        9 = "Memory: ";
     };
 
     return $TitleMappings;
@@ -79,11 +76,6 @@ Function Get-Uptime()
 
     $FormattedUptime =  $Uptime.Days.ToString() + "d " + $Uptime.Hours.ToString() + "h " + $Uptime.Minutes.ToString() + "m " + $Uptime.Seconds.ToString() + "s ";
     return $FormattedUptime;
-}
-
-Function Get-WM() 
-{
-    return "DWM";
 }
 
 Function Get-Shell()
