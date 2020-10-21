@@ -1,6 +1,6 @@
 # Windows screenFetch
 
-<img src="screenshots/ss.png"/>
+<img src="screenshots/modified.png"/>
 
 #### ScreenFetch <hr>
 
