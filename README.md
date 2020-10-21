@@ -41,7 +41,7 @@ No longer supported
 - Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
 
 <br>
-<img src="screenshots/mac.png">
+<img src="screenshots/mac_modified.png">
 
 #### Troubleshooting <hr>
 If you have followed the installation steps but you're getting the following error:
