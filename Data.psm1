@@ -91,47 +91,38 @@ Function Get-Shell()
     return "PowerShell $($PSVersionTable.PSVersion.ToString())";
 }
 
-Function Get-Display()
-{
-    # This gives the current resolution
-    $videoMode = Get-CimInstance -ClassName Win32_VideoController;
-    $Display = "$($videoMode.CurrentHorizontalResolution)".Trim() + " x " + "$($videoMode.CurrentVerticalResolution)".Trim() + " @ " + "$($videoMode.CurrentRefreshRate)".Trim() + "Hz";
-    return $Display;
-}
-
 Function Get-Displays()
 {
-    return Get-Display;
-
     $Displays = New-Object System.Collections.Generic.List[System.Object];
+    
+    $Monitors = Get-CimInstance -ClassName Win32_VideoController | Select-Object CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate;
 
-    # This gives the available resolutions
-    $monitors = Get-CimInstance -N "root\wmi" -Class WmiMonitorListedSupportedSourceModes
+    $NumMonitors = $Monitors.Count;
 
-    foreach($monitor in $monitors) 
-    {
-        # Sort the available modes by display area (width*height)
-        $sortedResolutions = $monitor.MonitorSourceModes | Sort-Object -Property {$_.HorizontalActivePixels * $_.VerticalActivePixels}
-        $maxResolutions = $sortedResolutions | Select-Object @{N="MaxRes";E={"$($_.HorizontalActivePixels) x $($_.VerticalActivePixels) "}}
+    for ($i=0; $i -lt ($NumMonitors); $i++) {
+        $HorizontalResolution = $Monitors[$i].CurrentHorizontalResolution;
+        $VerticalResolution = $Monitors[$i].CurrentVerticalResolution;
+        $RefreshRate = $Monitors[$i].CurrentRefreshRate;
+        $Display = $HorizontalResolution.ToString() + " x " + $VerticalResolution.ToString() + " @ " + $RefreshRate.ToString() + "Hz";
 
-        $Displays.Add(($maxResolutions | Select-Object -Last 1).MaxRes);
+        if ($i -gt 0) {
+            $Displays = $Displays.Trim() + "; "
+        }
+
+        $Displays = $Displays + $Display;
     }
 
-    if ($Displays.Count -eq 1) {
-        return Get-Display
-    }
-
-    return $Displays;
+    return $Displays
 }
 
 Function Get-CPU() 
 {
-    return ((Get-CimInstance Win32_Processor|%{$_.Name}) -replace '\s+', ' ') -join("; ");
+    return ((Get-CimInstance -ClassName Win32_Processor | ForEach-Object {$_.Name}) -replace '\s+', ' ') -join("; ");
 }
 
 Function Get-GPU() 
 {
-    return (Get-CimInstance CIM_VideoController|%{$_.Name}) -join("; ");
+    return (Get-CimInstance -ClassName CIM_VideoController | ForEach-Object {$_.Name}) -join("; ");
 }
 
 Function Get-Mobo()
