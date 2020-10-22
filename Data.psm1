@@ -1,5 +1,5 @@
 
-Function Get-SystemSpecifications() 
+Function Get-SystemSpecifications()
 {
 
     $UserInfo = Get-UserInformation;
@@ -16,10 +16,10 @@ Function Get-SystemSpecifications()
     $Disks = Get-Disks;
 
 
-    [System.Collections.ArrayList] $SystemInfoCollection = 
-        $UserInfo, 
+    [System.Collections.ArrayList] $SystemInfoCollection =
+        $UserInfo,
         $DividingLine,
-        $OS, 
+        $OS,
         $Kernel,
         $Uptime,
         $Shell,
@@ -33,16 +33,16 @@ Function Get-SystemSpecifications()
     {
         [void]$SystemInfoCollection.Add($Disk);
     }
-    
+
     return $SystemInfoCollection;
 }
 
-Function Get-LineToTitleMappings() 
-{ 
+Function Get-LineToTitleMappings()
+{
     $TitleMappings = @{
         0 = "";
         1 = "";
-        2 = "OS: "; 
+        2 = "OS: ";
         3 = "Kernel: ";
         4 = "Uptime: ";
         5 = "Shell: ";
@@ -68,7 +68,7 @@ Function Get-DividingLine()
 
 Function Get-OS()
 {
-    return (Get-CimInstance Win32_OperatingSystem).Caption + " " + 
+    return (Get-CimInstance Win32_OperatingSystem).Caption + " " +
         (Get-CimInstance Win32_OperatingSystem).OSArchitecture;
 }
 
@@ -120,12 +120,12 @@ Function Get-Displays()
     return $Displays;
 }
 
-Function Get-CPU() 
+Function Get-CPU()
 {
     return ((Get-CimInstance -ClassName Win32_Processor | ForEach-Object {$_.Name}) -replace '\s+', ' ') -join("; ");
 }
 
-Function Get-GPU() 
+Function Get-GPU()
 {
     return (Get-CimInstance -ClassName Win32_VideoController | ForEach-Object {$_.Name}) -join("; ");
 }
@@ -137,7 +137,7 @@ Function Get-Mobo()
 
 }
 
-Function Get-RAM() 
+Function Get-RAM()
 {
     $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)); 
     $TotalRam = ([math]::Truncate((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB));
@@ -150,8 +150,8 @@ Function Get-RAM()
     return $UsedRam.ToString() + "MiB / " + $TotalRam.ToString() + "MiB " + "(" + $UsedRamPercent.ToString() + "%" + " used)";
 }
 
-Function Get-Disks() 
-{     
+Function Get-Disks()
+{
     $FormattedDisks = New-Object System.Collections.Generic.List[System.Object];
 
     $NumDisks = (Get-CimInstance Win32_LogicalDisk).Count;
@@ -194,8 +194,8 @@ Function Get-Disks()
                 $UsedDiskPercent = 100;
             }
 
-            $FormattedDisk = "Disk " + $DiskID.ToString() + " " + 
-                $UsedDiskSizeGB.ToString() + "GiB" + " / " + $DiskSizeGB.ToString() + "GiB " + 
+            $FormattedDisk = "Disk " + $DiskID.ToString() + " " +
+                $UsedDiskSizeGB.ToString() + "GiB" + " / " + $DiskSizeGB.ToString() + "GiB " +
                 "(" + $UsedDiskPercent.ToString() + "%" + " used)";
             $FormattedDisks.Add($FormattedDisk);
         }
@@ -223,7 +223,7 @@ Function Get-Disks()
                 $UsedDiskSizeGB.ToString() + "GiB" + " / " + $DiskSizeGB.ToString() + "GiB " +
                 "(" + $UsedDiskPercent.ToString() + "%" + ")";
             $FormattedDisks.Add($FormattedDisk);
-        } 
+        }
         else {
             $FormattedDisk = "Disk " + $DiskID.ToString() + " Empty";
             $FormattedDisks.Add($FormattedDisk);
