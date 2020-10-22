@@ -124,7 +124,7 @@ Function Get-Displays()
 
 Function Get-CPU()
 {
-    return ((Get-CimInstance -ClassName Win32_Processor | ForEach-Object {$_.Name}) -replace '\s+', ' ') -join("; ");
+    return (Get-CimInstance -ClassName Win32_Processor | ForEach-Object {$_.Name}) -join("; ");
 }
 
 Function Get-GPU()
