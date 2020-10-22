@@ -38,6 +38,7 @@ Function Screenfetch($distro)
         {
             Write-Host $AsciiArt[$line] -f Cyan -NoNewline;
         }
+        
         Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
 
         if ($line -eq 0)
