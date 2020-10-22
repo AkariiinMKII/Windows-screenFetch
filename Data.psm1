@@ -3,6 +3,7 @@ Function Get-SystemSpecifications()
 {
 
     $UserInfo = Get-UserInformation;
+    $DividingLine = Get-DividingLine;
     $OS = Get-OS;
     $Kernel = Get-Kernel;
     $Uptime = Get-Uptime;
@@ -17,6 +18,7 @@ Function Get-SystemSpecifications()
 
     [System.Collections.ArrayList] $SystemInfoCollection = 
         $UserInfo, 
+        $DividingLine,
         $OS, 
         $Kernel,
         $Uptime,
@@ -39,15 +41,16 @@ Function Get-LineToTitleMappings()
 { 
     $TitleMappings = @{
         0 = "";
-        1 = "OS: "; 
-        2 = "Kernel: ";
-        3 = "Uptime: ";
-        4 = "Shell: ";
-        5 = "Motherboard: ";
-        6 = "CPU: ";
-        7 = "GPU: ";
-        8 = "Display: ";
-        9 = "Memory: ";
+        1 = "";
+        2 = "OS: "; 
+        3 = "Kernel: ";
+        4 = "Uptime: ";
+        5 = "Shell: ";
+        6 = "Motherboard: ";
+        7 = "CPU: ";
+        8 = "GPU: ";
+        9 = "Display: ";
+        10 = "Memory: ";
     };
 
     return $TitleMappings;
@@ -56,6 +59,11 @@ Function Get-LineToTitleMappings()
 Function Get-UserInformation()
 {
     return $env:USERNAME + "@" + [System.Net.Dns]::GetHostName();
+}
+
+Function Get-DividingLine()
+{
+    return "-" * $UserInfo.Length;
 }
 
 Function Get-OS()
