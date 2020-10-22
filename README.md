@@ -22,7 +22,7 @@ The original screenfetch requires a system that supports bash so it cannot be us
 
 ## Installation
 
-### Git clone
+- ### Git clone
 
 **Step 1.** Go to PowerShell module path, check by
 
@@ -36,27 +36,23 @@ $env:PSModulePath -Split ";"
 git clone https://github.com/AkariiinMKII/Windows-screenFetch
 ```
 
-### Powershell Gallery (not recommended)
+- ### Powershell Gallery (not recommended)
 
-**Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.**
+**Note** that Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.
+
+If you were using windows-screenfetch before it was uploaded to Powershell Gallery, you will need to delete the local instance and associated environment variables before running the following install.
 
 ```powershell
 Install-Module -Name windows-screenfetch
 ```
 
-Simply run the `screenfetch` command after installing the module and you should be good to go.
-
-**Note** that if you were using windows-screenfetch before it was uploaded to Powershell Gallery, you will need to delete the local instance and associated environment variables before running the following install.
-
-### ~~Command Prompt~~
-
-No longer supported
+Simply run `screenfetch` command after installing the module and you should be good to go.
 
 ## Usage Parameters
 
-- The `-distro` argument allows you to specify the ASCII logo shown
+ The `-distro` argument allows you to specify the ASCII logo shown
 
-- Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
+ Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
 
 ![screenshot](screenshots/mac_modified.png)  
 
@@ -70,10 +66,3 @@ The script will not execute on the system.
 ```
 
 A common fix is to run the powershell command `Set-ExecutionPolicy Unrestricted` in a shell with administrative privileges.
-
-## Contact Me
-
-Below are my two most active social portals
-
-- `julianchow@outlook.com`
-- <https://twitter.com/JulianChow94>
