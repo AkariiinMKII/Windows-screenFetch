@@ -36,16 +36,19 @@ Function Screenfetch($distro)
         Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
 
         if ($line -eq 0) {
-            Write-Host $SystemInfoCollection[0].Split("@")[0] -f Red -NoNewline;
-            Write-Host "@" -NoNewline;
-            Write-Host $SystemInfoCollection[0].Split("@")[1] -f Red;
+            $UserInfoSeperator = "@";
+            $SplittedUserInfo = $SystemInfoCollection[$line].Split($UserInfoSeperator);
+            
+            Write-Host $SplittedUserInfo[0] -f Red -NoNewline;
+            Write-Host $UserInfoSeperator -NoNewline;
+            Write-Host $SplittedUserInfo[1] -f Red;
         }
         elseif ($SystemInfoCollection[$line] -like '*:*') {
-            $Seperator = ":";
-            $Splitted = $SystemInfoCollection[$line].Split($seperator);
+            $DiskInfoSeperator = ":";
+            $SplittedDiskInfo = $SystemInfoCollection[$line].Split($DiskInfoSeperator);
 
-            $Title = $Splitted[0] + $Seperator;
-            $Content = $Splitted[1];
+            $Title = $SplittedDiskInfo[0] + $DiskInfoSeperator;
+            $Content = $SplittedDiskInfo[1];
 
             Write-Host $Title -f Red -NoNewline;
             Write-Host $Content;
