@@ -114,11 +114,12 @@ Function Get-Displays()
         }
     }
 
-    if ($Displays.Count -eq 0) {
-        $Displays = "NONE";
+    if ($Displays) {
+        return $Displays;
     }
-
-    return $Displays;
+    else {
+        return "NONE";
+    }
 }
 
 Function Get-CPU()
