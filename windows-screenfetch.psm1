@@ -6,19 +6,16 @@ Function Screenfetch($distro)
 {
     $AsciiArt = "";
 
-    if (-not $distro)
-    {
+    if (-not $distro) {
         $AsciiArt = . Get-WindowsArt;
     }
 
     if (([string]::Compare($distro, "mac", $true) -eq 0) -or
         ([string]::Compare($distro, "macOS", $true) -eq 0) -or
         ([string]::Compare($distro, "osx", $true) -eq 0)) {
-
         $AsciiArt = . Get-MacArt;
     }
-    else
-    {
+    else {
         $AsciiArt = . Get-WindowsArt;
     }
 
@@ -27,29 +24,23 @@ Function Screenfetch($distro)
 
     # Iterate over all lines from the SystemInfoCollection to display all information
     $LineNumber = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum;
-    for ($line = 0; $line -lt $LineNumber; $line++)
-    {
-        if (($AsciiArt[$line].Length) -eq 0)
-        {
+    for ($line = 0; $line -lt $LineNumber; $line++) {
+        if (($AsciiArt[$line].Length) -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
             Write-Host "                                    " -f Cyan -NoNewline;
         }
-        else
-        {
+        else {
             Write-Host $AsciiArt[$line] -f Cyan -NoNewline;
         }
         
         Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
 
-        if ($line -eq 0)
-        {
+        if ($line -eq 0) {
             Write-Host $SystemInfoCollection[0].Split("@")[0] -f Red -NoNewline;
             Write-Host "@" -NoNewline;
             Write-Host $SystemInfoCollection[0].Split("@")[1] -f Red;
         }
-
-        elseif ($SystemInfoCollection[$line] -like '*:*')
-        {
+        elseif ($SystemInfoCollection[$line] -like '*:*') {
             $Seperator = ":";
             $Splitted = $SystemInfoCollection[$line].Split($seperator);
 
@@ -59,8 +50,7 @@ Function Screenfetch($distro)
             Write-Host $Title -f Red -NoNewline;
             Write-Host $Content;
         }
-        else
-        {
+        else {
             Write-Host $SystemInfoCollection[$line];
         }
     }
