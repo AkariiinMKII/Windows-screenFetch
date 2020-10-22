@@ -6,7 +6,7 @@ Function Get-SystemSpecifications()
     $DividingLine = Get-DividingLine;
     $OS = Get-OS;
     $Kernel = Get-Kernel;
-    $Uptime = Get-Uptime;
+    $Uptime = Get-SystemUptime;
     $Shell = Get-Shell;
     $Motherboard = Get-Mobo;
     $CPU = Get-CPU;
@@ -77,7 +77,7 @@ Function Get-Kernel()
     return (Get-CimInstance  Win32_OperatingSystem).Version;
 }
 
-Function Get-Uptime()
+Function Get-SystemUptime()
 {
     $Uptime = (([DateTime](Get-CimInstance Win32_OperatingSystem).LocalDateTime) -
             ([DateTime](Get-CimInstance Win32_OperatingSystem).LastBootUpTime));
