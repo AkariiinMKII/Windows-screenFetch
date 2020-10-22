@@ -27,19 +27,19 @@ Function Get-MacArt()
             "                 -/+:.              ",
             "                :++++.              ",
             "               /+++/.               ",
-            "       .:-::- .+/:-\`\`.::-           ",
-            "    .:/++++++/::::/++++++/:\`        ",
-            "  .:///////////////////////:\`       ",
-            "  ////////////////////////\`         ",
-            " -+++++++++++++++++++++++\`          ",
+            "       .:-::- .+/:-''.::-           ",
+            "    .:/++++++/::::/++++++/:'        ",
+            "  .:///////////////////////:'       ",
+            "  ////////////////////////'         ",
+            " -+++++++++++++++++++++++'          ",
             " /++++++++++++++++++++++/           ",
             " /sssssssssssssssssssssss.          ",
             " :ssssssssssssssssssssssss-         ",
-            "  osssssssssssssssssssssssso/\`      ",
-            "  \`syyyyyyyyyyyyyyyyyyyyyyyy+\`      ",
-            "   \`ossssssssssssssssssssss/        ",
+            "  osssssssssssssssssssssssso/'      ",
+            "  'syyyyyyyyyyyyyyyyyyyyyyyy+'      ",
+            "   'ossssssssssssssssssssss/        ",
             "     :ooooooooooooooooooo+.         ",
-            "      \`:+oo+/:-..-:/+o+/-           ";
+            "      ':+oo+/:-..-:/+o+/-           ";
 
     return $ArtArray;    
 }
