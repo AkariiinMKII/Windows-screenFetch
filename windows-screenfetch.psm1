@@ -47,7 +47,7 @@ Function Screenfetch($distro)
             $DiskInfoSeperator = ":";
             $SplittedDiskInfo = $SystemInfoCollection[$line].Split($DiskInfoSeperator);
 
-            $Title = $SplittedDiskInfo[0] + $DiskInfoSeperator;
+            $Title = ($SplittedDiskInfo[0], $DiskInfoSeperator) -join("");
             $Content = $SplittedDiskInfo[1];
 
             Write-Host $Title -f Red -NoNewline;
