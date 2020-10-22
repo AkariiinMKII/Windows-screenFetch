@@ -1,7 +1,6 @@
 #### Screenfetch for powershell
 #### Author Julian Chow
 
-
 Function Screenfetch($distro)
 {
     $AsciiArt = "";
@@ -27,31 +26,26 @@ Function Screenfetch($distro)
     for ($line = 0; $line -lt $LineNumber; $line++) {
         if (($AsciiArt[$line].Length) -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
-            Write-Host "                                    " -f Cyan -NoNewline;
+            Write-Host (" " * 36) -NoNewline;
         }
         else {
-            Write-Host $AsciiArt[$line] -f Cyan -NoNewline;
+            Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline;
         }
         
-        Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
+        Write-Host $LineToTitleMappings[$line] -ForegroundColor Red -NoNewline;
 
         if ($line -eq 0) {
-            $UserInfoSeperator = "@";
-            $SplittedUserInfo = $SystemInfoCollection[$line].Split($UserInfoSeperator);
+            $SplittedUserInfo = $SystemInfoCollection[$line].Split("@");
             
-            Write-Host $SplittedUserInfo[0] -f Red -NoNewline;
-            Write-Host $UserInfoSeperator -NoNewline;
-            Write-Host $SplittedUserInfo[1] -f Red;
+            Write-Host $SplittedUserInfo[0] -ForegroundColor Red -NoNewline;
+            Write-Host "@" -NoNewline;
+            Write-Host $SplittedUserInfo[1] -ForegroundColor Red;
         }
         elseif ($SystemInfoCollection[$line] -like '*:*') {
-            $DiskInfoSeperator = ":";
-            $SplittedDiskInfo = $SystemInfoCollection[$line].Split($DiskInfoSeperator);
+            $SplittedDiskInfo = $SystemInfoCollection[$line].Split(":");
 
-            $Title = ($SplittedDiskInfo[0], $DiskInfoSeperator) -join("");
-            $Content = $SplittedDiskInfo[1];
-
-            Write-Host $Title -f Red -NoNewline;
-            Write-Host $Content;
+            Write-Host ("Disk ", $SplittedDiskInfo[0], ": ") -Separator "" -ForegroundColor Red -NoNewline;
+            Write-Host $SplittedDiskInfo[1];
         }
         else {
             Write-Host $SystemInfoCollection[$line];

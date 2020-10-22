@@ -1,4 +1,3 @@
-
 Function Get-SystemSpecifications()
 {
 
@@ -58,7 +57,7 @@ Function Get-LineToTitleMappings()
 
 Function Get-UserInformation()
 {
-    return $env:USERNAME + "@" + [System.Net.Dns]::GetHostName();
+    return ($env:USERNAME, "@", [System.Net.Dns]::GetHostName()) -join("");
 }
 
 Function Get-DividingLine()
@@ -68,8 +67,7 @@ Function Get-DividingLine()
 
 Function Get-OS()
 {
-    return (Get-CimInstance Win32_OperatingSystem).Caption + " " +
-        (Get-CimInstance Win32_OperatingSystem).OSArchitecture;
+    return ((Get-CimInstance Win32_OperatingSystem).Caption, (Get-CimInstance Win32_OperatingSystem).OSArchitecture) -join(" ");
 }
 
 Function Get-Kernel()
@@ -79,23 +77,24 @@ Function Get-Kernel()
 
 Function Get-SystemUptime()
 {
-    $Uptime = (([DateTime](Get-CimInstance Win32_OperatingSystem).LocalDateTime) -
-            ([DateTime](Get-CimInstance Win32_OperatingSystem).LastBootUpTime));
+    $TimeTable = Get-CimInstance Win32_OperatingSystem | Select-Object LastBootUpTime, LocalDateTime;
 
-    $FormattedUptime =  $Uptime.Days.ToString() + "d " + $Uptime.Hours.ToString() + "h " + $Uptime.Minutes.ToString() + "m " + $Uptime.Seconds.ToString() + "s ";
+    $Uptime = (([DateTime]$TimeTable.LocalDateTime) - ([DateTime]$TimeTable.LastBootUpTime));
+    $FormattedUptime = ($Uptime.Days.ToString(), "d ", $Uptime.Hours.ToString(), "h ", $Uptime.Minutes.ToString(), "m ", $Uptime.Seconds.ToString(), "s") -join("");
+
     return $FormattedUptime;
 }
 
 Function Get-Shell()
 {
-    return "PowerShell $($PSVersionTable.PSVersion.ToString())";
+    return ("PowerShell", $PSVersionTable.PSVersion.ToString()) -join(" ");
 }
 
 Function Get-Displays()
 {
     $Displays = New-Object System.Collections.Generic.List[System.Object];
     
-    $Monitors = Get-CimInstance -ClassName Win32_VideoController | Select-Object CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate;
+    $Monitors = Get-CimInstance -ClassName Win32_VideoController | Select-Object CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate;
 
     for ($i=0; $i -lt ($Monitors.Count); $i++) {
         $HorizontalResolution = $Monitors[$i].CurrentHorizontalResolution;
@@ -103,7 +102,7 @@ Function Get-Displays()
         $RefreshRate = $Monitors[$i].CurrentRefreshRate;
 
         if ($HorizontalResolution -And $VerticalResolution -And $RefreshRate) {
-            $Display = $HorizontalResolution.ToString() + " x " + $VerticalResolution.ToString() + " @ " + $RefreshRate.ToString() + "Hz";
+            $Display = ($HorizontalResolution.ToString(), " x ", $VerticalResolution.ToString(), " @ ", $RefreshRate.ToString(), "Hz") -join("");
 
             if (!$Displays) {
                 $Displays = $Display;
@@ -135,7 +134,7 @@ Function Get-GPU()
 Function Get-Mobo()
 {
     $Motherboard = Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product;
-    return $Motherboard.Manufacturer + " " + $Motherboard.Product;
+    return ($Motherboard.Manufacturer, $Motherboard.Product) -join(" ");
 
 }
 
@@ -144,92 +143,52 @@ Function Get-RAM()
     $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)); 
     $TotalRam = ([math]::Truncate((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB));
     $UsedRam = $TotalRam - $FreeRam;
-    $FreeRamPercent = ($FreeRam / $TotalRam) * 100;
-    $FreeRamPercent = "{0:F0}" -f $FreeRamPercent;
-    $UsedRamPercent = ($UsedRam / $TotalRam) * 100;
-    $UsedRamPercent = "{0:F0}" -f $UsedRamPercent;
+    $UsedRamPercent = "{0:F0}" -f (($UsedRam / $TotalRam) * 100);
 
-    return $UsedRam.ToString() + "MiB / " + $TotalRam.ToString() + "MiB " + "(" + $UsedRamPercent.ToString() + "%" + " used)";
+    return ($UsedRam.ToString(), "MiB / ", $TotalRam.ToString(), "MiB (", $UsedRamPercent.ToString(), "% used)") -join("");
 }
 
 Function Get-Disks()
 {
     $FormattedDisks = New-Object System.Collections.Generic.List[System.Object];
 
-    $NumDisks = (Get-CimInstance Win32_LogicalDisk).Count;
+    $DiskTable = Get-CimInstance Win32_LogicalDisk | Select-Object DeviceId, Size, FreeSpace;
 
-    if ($NumDisks) {
-        for ($i=0; $i -lt ($NumDisks); $i++) {
-            $DiskID = (Get-CimInstance Win32_LogicalDisk)[$i].DeviceId;
-
-            $DiskSize = (Get-CimInstance Win32_LogicalDisk)[$i].Size;
-
-            if ($DiskSize -gt 0) {
-                $FreeDiskSize = (Get-CimInstance Win32_LogicalDisk)[$i].FreeSpace
-                $FreeDiskSizeGB = $FreeDiskSize / 1073741824;
-                $FreeDiskSizeGB = "{0:F0}" -f $FreeDiskSizeGB;
-
-                $DiskSizeGB = $DiskSize / 1073741824;
-                $DiskSizeGB = "{0:F0}" -f $DiskSizeGB;
-
-                if ($DiskSizeGB -gt 0 -And $FreeDiskSizeGB -gt 0) {
-                    $FreeDiskPercent = ($FreeDiskSizeGB / $DiskSizeGB) * 100;
-                    $FreeDiskPercent = "{0:F0}" -f $FreeDiskPercent;
-
-                    $UsedDiskSize = $DiskSize - $FreeDiskSize;
-                    $UsedDiskSizeGB = $UsedDiskSize / 1073741824;
-                    $UsedDiskSizeGB = "{0:F0}" -f $UsedDiskSizeGB;
-                    $UsedDiskPercent = ($UsedDiskSizeGB / $DiskSizeGB) * 100;
-                    $UsedDiskPercent = "{0:F0}" -f $UsedDiskPercent;
-                }
-                else {
-                    $FreeDiskPercent = 0;
-                    $UsedDiskSizeGB = 0;
-                    $UsedDiskPercent = 0;
-                }
-            }
-            else {
-                $DiskSizeGB = 0;
-                $FreeDiskSizeGB = 0;
-                $FreeDiskPercent = 0;
-                $UsedDiskSizeGB = 0;
-                $UsedDiskPercent = 100;
-            }
-
-            $FormattedDisk = "Disk " + $DiskID.ToString() + " " +
-                $UsedDiskSizeGB.ToString() + "GiB" + " / " + $DiskSizeGB.ToString() + "GiB " +
-                "(" + $UsedDiskPercent.ToString() + "%" + " used)";
-            $FormattedDisks.Add($FormattedDisk);
-        }
+    if ($DiskTable.Count) {
+        $NumDisk = $DiskTable.Count;
     }
     else {
-        $DiskID = (Get-CimInstance Win32_LogicalDisk).DeviceId;
+        $NumDisk = "1";
+    }
 
-        $FreeDiskSize = (Get-CimInstance Win32_LogicalDisk).FreeSpace
-        $FreeDiskSizeGB = $FreeDiskSize / 1073741824;
-        $FreeDiskSizeGB = "{0:F0}" -f $FreeDiskSizeGB;
+    for ($i=0; $i -lt ($NumDisk); $i++) {
+        $DiskID = $DiskTable[$i].DeviceId;
 
-        $DiskSize = (Get-CimInstance Win32_LogicalDisk).Size;
-        $DiskSizeGB = $DiskSize / 1073741824;
-        $DiskSizeGB = "{0:F0}" -f $DiskSizeGB;
+        $DiskSize = $DiskTable[$i].Size;
+        $FreeDiskSize = $DiskTable[$i].FreeSpace;
 
-        if ($DiskSize -gt 0 -And $FreeDiskSize -gt 0 ) {
-            $FreeDiskPercent = ($FreeDiskSizeGB / $DiskSizeGB) * 100;
-            $FreeDiskPercent = "{0:F0}" -f $FreeDiskPercent;
+        if ($DiskSize -gt 0) {
+            $DiskSizeGB = "{0:F0}" -f ($DiskSize / 1073741824);
 
-            $UsedDiskSizeGB = $DiskSizeGB - $FreeDiskSizeGB;
-            $UsedDiskPercent = ($UsedDiskSizeGB / $DiskSizeGB) * 100;
-            $UsedDiskPercent = "{0:F0}" -f $UsedDiskPercent;
+            $UsedDiskSize = $DiskSize - $FreeDiskSize;
+            $UsedDiskSizeGB = "{0:F0}" -f ($UsedDiskSize / 1073741824);
+            $UsedDiskPercent = "{0:F0}" -f (($UsedDiskSize / $DiskSize) * 100);
 
-            $FormattedDisk = "Disk " + $DiskID.ToString() + " " +
-                $UsedDiskSizeGB.ToString() + "GiB" + " / " + $DiskSizeGB.ToString() + "GiB " +
-                "(" + $UsedDiskPercent.ToString() + "%" + ")";
-            $FormattedDisks.Add($FormattedDisk);
+            if (($DiskSizeGB - 10) -gt 0) {
+                $DiskStatus = ($UsedDiskSizeGB.ToString(), "GiB / ", $DiskSizeGB.ToString(), "GiB (", $UsedDiskPercent.ToString(), "% used)") -join("");
+            }
+            else {
+                $DiskSizeMB = "{0:F0}" -f ($DiskSize / 1048576)
+                $UsedDiskSizeMB = "{0:F0}" -f ($UsedDiskSize / 1048576);
+                $DiskStatus = ($UsedDiskSizeMB.ToString(), "MiB / ", $DiskSizeMB.ToString(), "MiB (", $UsedDiskPercent.ToString(), "% used)") -join("");
+            }
         }
         else {
-            $FormattedDisk = "Disk " + $DiskID.ToString() + " Empty";
-            $FormattedDisks.Add($FormattedDisk);
+            $DiskStatus = "Empty";
         }
+
+        $FormattedDisk = ($DiskID.ToString(), $DiskStatus) -join("");
+        $FormattedDisks.Add($FormattedDisk);
     }
 
     return $FormattedDisks;
