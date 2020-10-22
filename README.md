@@ -24,7 +24,7 @@ The original screenfetch requires a system that supports bash so it cannot be us
 
 - ### Git clone
 
-**Step 1.** Go to PowerShell module path, check by
+**Step 1.** Go to PowerShell module path, check by running:
 
 ```powershell
 $env:PSModulePath -Split ";"
@@ -32,8 +32,26 @@ $env:PSModulePath -Split ";"
 
 **Step 2.** Clone this repository
 
+Git command is available with [git for windows](https://gitforwindows.org/), or just use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+
 ```bash
 git clone https://github.com/AkariiinMKII/Windows-screenFetch
+```
+
+**Step 3.** Import module
+
+Open your PowerShell profile, or create a new one if not exists:
+
+```powershell
+if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
+
+notepad $PROFILE
+```
+
+Then **Append** following line and save:
+
+```powershell
+Import-Module Windows-screenFetch
 ```
 
 - ### Powershell Gallery (not recommended)
