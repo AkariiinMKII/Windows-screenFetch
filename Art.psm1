@@ -43,5 +43,3 @@ Function Get-MacArt()
 
     return $ArtArray;    
 }
-
-

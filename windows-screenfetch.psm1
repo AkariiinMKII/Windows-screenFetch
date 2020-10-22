@@ -26,43 +26,41 @@ Function Screenfetch($distro)
     $LineToTitleMappings = . Get-LineToTitleMappings;
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    for ($line = 0; $line -lt $SystemInfoCollection.Count; $line++)
+    $LineNumber = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum;
+    for ($line = 0; $line -lt $LineNumber; $line++)
     {
         if (($AsciiArt[$line].Length) -eq 0)
         {
             # Write some whitespaces to sync the left spacing with the asciiart.
-            Write-Host "                                        " -f Cyan -NoNewline;
+            Write-Host "                                    " -f Cyan -NoNewline;
         }
         else
         {
             Write-Host $AsciiArt[$line] -f Cyan -NoNewline;
-            Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
+        }
+        Write-Host $LineToTitleMappings[$line] -f Red -NoNewline;
 
-            if ($line -eq 0)
-            {
-                Write-Host $SystemInfoCollection[$line] -f Red;
-            }
-            elseif ($SystemInfoCollection[$line] -like '*:*')
-            {
-                $Seperator = ":";
-                $Splitted = $SystemInfoCollection[$line].Split($seperator);
+        if ($line -eq 0)
+        {
+            Write-Host $SystemInfoCollection[0].Split("@")[0] -f Red -NoNewline;
+            Write-Host "@" -NoNewline;
+            Write-Host $SystemInfoCollection[0].Split("@")[1] -f Red;
+        }
 
-                $Title = $Splitted[0] + $Seperator;
-                $Content = $Splitted[1];
+        elseif ($SystemInfoCollection[$line] -like '*:*')
+        {
+            $Seperator = ":";
+            $Splitted = $SystemInfoCollection[$line].Split($seperator);
 
-                Write-Host $Title -f Red -NoNewline;
-                Write-Host $Content;
-            }
-            else
-            {
-                Write-Host $SystemInfoCollection[$line];
-            }
-            if (($SystemInfoCollection.Count -eq $line+1) -And
-                ($AsciiArt.Count -gt $SystemInfoCollection.Count)) {
-                for ($continue = $line+1; $continue -lt $AsciiArt.Count; $continue++) {
-                    Write-Host $AsciiArt[$continue] -f Cyan;
-                }
-            }
+            $Title = $Splitted[0] + $Seperator;
+            $Content = $Splitted[1];
+
+            Write-Host $Title -f Red -NoNewline;
+            Write-Host $Content;
+        }
+        else
+        {
+            Write-Host $SystemInfoCollection[$line];
         }
     }
 }
