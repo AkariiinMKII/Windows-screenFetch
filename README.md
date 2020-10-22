@@ -38,7 +38,7 @@ git clone https://github.com/AkariiinMKII/Windows-screenFetch
 
 ### Powershell Gallery (not recommended)
 
-Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.
+**Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.**
 
 ```powershell
 Install-Module -Name windows-screenfetch
