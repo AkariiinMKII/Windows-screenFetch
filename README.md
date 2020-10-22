@@ -32,12 +32,12 @@ Run following command to check path
 $env:PSModulePath -Split ";"
 ```
 
-It is recommended to use defaule `$profile` directory, you need to create one if not exists
+It is recommended to use defaule `$PROFILE` directory, you need to create one if not exists
 
 ```powershell
-if (!(Test-Path (((Split-Path $profile), "Modules") -join("\")))) { New-Item -Type Directory -Path (((Split-Path $profile), "Modules") -join("\"))  -Force | Out-Null }
+if (!(Test-Path (((Split-Path $PROFILE), "Modules") -join("\")))) { New-Item -Type Directory -Path (((Split-Path $PROFILE), "Modules") -join("\")) -Force | Out-Null }
 
-Set-Location (((Split-Path $profile), "Modules") -join("\"))
+Set-Location (((Split-Path $PROFILE), "Modules") -join("\"))
 ```
 
 #### Step 2. Clone this repository
