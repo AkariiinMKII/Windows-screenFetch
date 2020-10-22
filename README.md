@@ -24,13 +24,23 @@ The original screenfetch requires a system that supports bash so it cannot be us
 
 - ### Git clone
 
-**Step 1.** Go to PowerShell module path, check by running:
+#### Step 1. Go to `Modules` directory in PowerShell path
+
+Run following command to check path
 
 ```powershell
 $env:PSModulePath -Split ";"
 ```
 
-**Step 2.** Clone this repository
+It is recommended to use defaule `$profile` directory, you need to create one if not exists
+
+```powershell
+if (!(Test-Path (((Split-Path $profile), "Modules") -join("\")))) { New-Item -Type Directory -Path (((Split-Path $profile), "Modules") -join("\"))  -Force | Out-Null }
+
+Set-Location (((Split-Path $profile), "Modules") -join("\"))
+```
+
+#### Step 2. Clone this repository
 
 Git command is available with [git for windows](https://gitforwindows.org/), or just use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
@@ -38,17 +48,17 @@ Git command is available with [git for windows](https://gitforwindows.org/), or 
 git clone https://github.com/AkariiinMKII/Windows-screenFetch
 ```
 
-**Step 3.** Import module
+**Step 3.** Set as Import-Module
 
-Open your PowerShell profile, or create a new one if not exists:
+Ensure your PowerShell profile and open in editor
 
 ```powershell
-if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
+if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force | Out-Null }
 
 notepad $PROFILE
 ```
 
-Then **Append** following line and save:
+**Add** following line and save
 
 ```powershell
 Import-Module Windows-screenFetch
