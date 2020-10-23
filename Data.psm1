@@ -4,7 +4,7 @@ Function Get-SystemSpecifications()
     $UserInfo = Get-UserInformation;
     $DividingLine = Get-DividingLine;
     $OS = Get-OS;
-    $Kernel = Get-Kernel;
+    $Version = Get-Version;
     $Uptime = Get-SystemUptime;
     $Shell = Get-Shell;
     $Motherboard = Get-Mobo;
@@ -19,7 +19,7 @@ Function Get-SystemSpecifications()
         $UserInfo,
         $DividingLine,
         $OS,
-        $Kernel,
+        $Version,
         $Uptime,
         $Shell,
         $Motherboard,
@@ -42,7 +42,7 @@ Function Get-LineToTitleMappings()
         0 = "";
         1 = "";
         2 = "OS: ";
-        3 = "Kernel: ";
+        3 = "Version: ";
         4 = "Uptime: ";
         5 = "Shell: ";
         6 = "Motherboard: ";
@@ -70,9 +70,9 @@ Function Get-OS()
     return ((Get-CimInstance Win32_OperatingSystem).Caption, (Get-CimInstance Win32_OperatingSystem).OSArchitecture) -join(" ");
 }
 
-Function Get-Kernel()
+Function Get-Version()
 {
-    return (Get-CimInstance  Win32_OperatingSystem).Version;
+    return (Get-CimInstance Win32_OperatingSystem).Version;
 }
 
 Function Get-SystemUptime()
@@ -137,13 +137,13 @@ Function Get-Mobo()
 {
     $Motherboard = Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product;
     return ($Motherboard.Manufacturer, $Motherboard.Product) -join(" ");
-
 }
 
 Function Get-RAM()
 {
     $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)); 
     $TotalRam = ([math]::Truncate((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB));
+    
     $UsedRam = $TotalRam - $FreeRam;
     $UsedRamPercent = "{0:F0}" -f (($UsedRam / $TotalRam) * 100);
 
