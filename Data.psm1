@@ -187,7 +187,7 @@ Function Get-Disks()
             $DiskStatus = "Empty";
         }
 
-        $FormattedDisk = ($DiskID.ToString(), $DiskStatus) -join("");
+        $FormattedDisk = ($DiskID.ToString(), $DiskStatus) -join(" ");
         $FormattedDisks.Add($FormattedDisk);
     }
 

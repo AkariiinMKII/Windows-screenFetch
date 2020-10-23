@@ -44,7 +44,7 @@ Function Screenfetch($distro)
         elseif ($SystemInfoCollection[$line] -like '*:*') {
             $SplittedDiskInfo = $SystemInfoCollection[$line].Split(":");
 
-            Write-Host ("Disk ", $SplittedDiskInfo[0], ": ") -Separator "" -ForegroundColor Red -NoNewline;
+            Write-Host ("Disk ", $SplittedDiskInfo[0], ":") -Separator "" -ForegroundColor Red -NoNewline;
             Write-Host $SplittedDiskInfo[1];
         }
         else {
