@@ -164,7 +164,7 @@ Function Get-Disks()
     if ($DiskTable.Count) {
         $NumDisk = $DiskTable.Count;
     }
-    else {
+    elseif ($DiskTable) {
         $NumDisk = "1";
     }
 
