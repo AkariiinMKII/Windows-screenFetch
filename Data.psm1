@@ -168,20 +168,25 @@ Function Get-Disks()
         $FreeDiskSize = $DiskTable[$i].FreeSpace;
 
         if ($DiskSize -gt 0) {
-            $DiskSizeGB = "{0:F0}" -f ($DiskSize / 1073741824);
-
             $UsedDiskSize = $DiskSize - $FreeDiskSize;
-            $UsedDiskSizeGB = "{0:F0}" -f ($UsedDiskSize / 1073741824);
             $UsedDiskPercent = "{0:F0}" -f (($UsedDiskSize / $DiskSize) * 100);
+            
+            $CheckSize = $DiskSize / 10737418240;
 
-            if (($DiskSizeGB - 10) -gt 0) {
-                $DiskStatus = ($UsedDiskSizeGB.ToString(), "GiB / ", $DiskSizeGB.ToString(), "GiB (", $UsedDiskPercent.ToString(), "% used)") -join("");
+            if ($CheckSize -gt 1) {
+                $DiskSizeValue = "{0:F0}" -f ($DiskSize / 1073741824);
+                $UsedDiskSizeValue = "{0:F0}" -f ($UsedDiskSize / 1073741824);
+
+                $Unit = "GiB";
             }
             else {
-                $DiskSizeMB = "{0:F0}" -f ($DiskSize / 1048576)
-                $UsedDiskSizeMB = "{0:F0}" -f ($UsedDiskSize / 1048576);
-                $DiskStatus = ($UsedDiskSizeMB.ToString(), "MiB / ", $DiskSizeMB.ToString(), "MiB (", $UsedDiskPercent.ToString(), "% used)") -join("");
+                $DiskSizeValue = "{0:F0}" -f ($DiskSize / 1048576);
+                $UsedDiskSizeValue = "{0:F0}" -f ($UsedDiskSize / 1048576);
+
+                $Unit = "MiB";
             }
+
+            $DiskStatus = ($UsedDiskSizeValue.ToString(), $Unit, " / ", $DiskSizeValue.ToString(), $Unit, " (", $UsedDiskPercent.ToString(), "% used)") -join("");
         }
         else {
             $DiskStatus = "Empty";
