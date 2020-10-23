@@ -162,13 +162,13 @@ Function Get-Disks()
     $DiskTable = Get-CimInstance Win32_LogicalDisk | Select-Object DeviceId, Size, FreeSpace;
 
     if ($DiskTable.Count) {
-        $NumDisk = $DiskTable.Count;
+        $NumDisks = $DiskTable.Count;
     }
     elseif ($DiskTable) {
-        $NumDisk = "1";
+        $NumDisks = "1";
     }
 
-    for ($i=0; $i -lt ($NumDisk); $i++) {
+    for ($i=0; $i -lt ($NumDisks); $i++) {
         $DiskID = $DiskTable[$i].DeviceId;
 
         $DiskSize = $DiskTable[$i].Size;
