@@ -50,18 +50,16 @@ git clone https://github.com/AkariiinMKII/Windows-screenFetch
 
 **Step 3.** Set as Import-Module
 
-Ensure your PowerShell profile and open in editor
+Ensure your PowerShell profile
 
 ```powershell
 if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force | Out-Null }
-
-notepad $PROFILE
 ```
 
-**Add** following line and save
+Appemd Import-Module config to profile
 
 ```powershell
-Import-Module Windows-screenFetch
+Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
 ```
 
 - ### Powershell Gallery (not recommended)
