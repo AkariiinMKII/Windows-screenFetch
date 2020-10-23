@@ -22,8 +22,8 @@ Function Screenfetch($distro)
     $LineToTitleMappings = . Get-LineToTitleMappings;
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $LineNumber = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum;
-    for ($line = 0; $line -lt $LineNumber; $line++) {
+    $NumLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum;
+    for ($line = 0; $line -lt $NumLines; $line++) {
         if (($AsciiArt[$line].Length) -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
             Write-Host (" " * 36) -NoNewline;
