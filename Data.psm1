@@ -143,7 +143,7 @@ Function Get-RAM()
 {
     $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)); 
     $TotalRam = ([math]::Truncate((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB));
-    
+
     $UsedRam = $TotalRam - $FreeRam;
     $UsedRamPercent = "{0:F0}" -f (($UsedRam / $TotalRam) * 100);
 
