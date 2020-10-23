@@ -103,7 +103,7 @@ Function Get-Displays()
         $NumMonitors = "1";
     }
 
-    for ($i=0; $i -lt ($NumMonitors); $i++) {
+    for ($i=0; $i -lt $NumMonitors; $i++) {
         $HorizontalResolution = $Monitors[$i].CurrentHorizontalResolution;
         $VerticalResolution = $Monitors[$i].CurrentVerticalResolution;
         $RefreshRate = $Monitors[$i].CurrentRefreshRate;
@@ -168,7 +168,7 @@ Function Get-Disks()
         $NumDisks = "1";
     }
 
-    for ($i=0; $i -lt ($NumDisks); $i++) {
+    for ($i=0; $i -lt $NumDisks; $i++) {
         $DiskID = $DiskTable[$i].DeviceId;
 
         $DiskSize = $DiskTable[$i].Size;
