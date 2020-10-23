@@ -49,7 +49,7 @@ Function Get-LineToTitleMappings()
         7 = "CPU: ";
         8 = "GPU: ";
         9 = "Display: ";
-        10 = "Memory: ";
+        10 = "RAM: ";
     };
 
     return $TitleMappings;
