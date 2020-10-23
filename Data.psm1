@@ -96,12 +96,7 @@ Function Get-Displays()
     
     $Monitors = Get-CimInstance -ClassName Win32_VideoController | Select-Object CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate;
 
-    if ($Monitors.Count) {
-        $NumMonitors = $Monitors.Count;
-    }
-    elseif ($Monitors) {
-        $NumMonitors = "1";
-    }
+    $NumMonitors = ($Monitors | Measure-Object).Count;
 
     for ($i=0; $i -lt $NumMonitors; $i++) {
         $HorizontalResolution = $Monitors[$i].CurrentHorizontalResolution;
@@ -161,12 +156,7 @@ Function Get-Disks()
 
     $DiskTable = Get-CimInstance Win32_LogicalDisk | Select-Object DeviceId, Size, FreeSpace;
 
-    if ($DiskTable.Count) {
-        $NumDisks = $DiskTable.Count;
-    }
-    elseif ($DiskTable) {
-        $NumDisks = "1";
-    }
+    $NumDisks = ($DiskTable | Measure-Object).Count;
 
     for ($i=0; $i -lt $NumDisks; $i++) {
         $DiskID = $DiskTable[$i].DeviceId;
