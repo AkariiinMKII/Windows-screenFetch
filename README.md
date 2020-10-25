@@ -36,7 +36,6 @@ It is recommended to use defaule `$PROFILE` directory, you need to create one if
 
 ```powershell
 $UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}
-
 Set-Location (Split-Path $PROFILE | Join-Path -ChildPath Modules)
 ```
 
@@ -53,7 +52,7 @@ git clone https://github.com/AkariiinMKII/Windows-screenFetch
 Ensure your PowerShell profile
 
 ```powershell
-if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force | Out-Null }
+if (!(Test-Path $PROFILE )) { New-Item $PROFILE -Type File -Force | Out-Null }
 ```
 
 Appemd Import-Module config to profile
