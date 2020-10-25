@@ -35,9 +35,9 @@ $env:PSModulePath -Split ";"
 It is recommended to use defaule `$PROFILE` directory, you need to create one if not exists
 
 ```powershell
-if (!(Test-Path (((Split-Path $PROFILE), "Modules") -join("\")))) { New-Item -Type Directory -Path (((Split-Path $PROFILE), "Modules") -join("\")) -Force | Out-Null }
+$UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}
 
-Set-Location (((Split-Path $PROFILE), "Modules") -join("\"))
+Set-Location (Split-Path $PROFILE | Join-Path -ChildPath Modules)
 ```
 
 #### Step 2. Clone this repository
