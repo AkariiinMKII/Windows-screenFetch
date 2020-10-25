@@ -55,7 +55,7 @@ Ensure your PowerShell profile
 if (!(Test-Path $PROFILE)) {New-Item $PROFILE -Type File -Force | Out-Null}
 ```
 
-Appemd Import-Module config to profile
+Append Import-Module config to `$PROFILE`
 
 ```powershell
 Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
