@@ -52,7 +52,7 @@ git clone https://github.com/AkariiinMKII/Windows-screenFetch
 Ensure your PowerShell profile
 
 ```powershell
-if (!(Test-Path $PROFILE )) { New-Item $PROFILE -Type File -Force | Out-Null }
+if (!(Test-Path $PROFILE)) {New-Item $PROFILE -Type File -Force | Out-Null}
 ```
 
 Appemd Import-Module config to profile
