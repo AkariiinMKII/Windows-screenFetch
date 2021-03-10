@@ -2,7 +2,7 @@
 
 _Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
 
-![screenshot](screenshots/modified.png)
+![screenshot](screenshots/screenfetch.png)
 
 ## ScreenFetch
 
@@ -60,17 +60,15 @@ Append Import-Module config to `$PROFILE`
 Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
 ```
 
-- ### Powershell Gallery (not recommended)
-
-**Note** that Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.
-
-If you were using windows-screenfetch before it was uploaded to Powershell Gallery, you will need to delete the local instance and associated environment variables before running the following install.
-
-```powershell
-Install-Module -Name windows-screenfetch
-```
-
 Simply run `screenfetch` command after installing the module and you should be good to go.
+
+- ### ~~Powershell Gallery (not recommended)~~
+
+~~**Note** that Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.~~
+
+~~If you were using windows-screenfetch before it was uploaded to Powershell Gallery, you will need to delete the local instance and associated environment variables before running the following install.~~
+
+~~**Install-Module -Name windows-screenfetch**~~
 
 ## Usage Parameters
 
@@ -78,7 +76,7 @@ Simply run `screenfetch` command after installing the module and you should be g
 
  Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
 
-![screenshot](screenshots/mac_modified.png)  
+![screenshot](screenshots/mac_distro.png)  
 
 ## Troubleshooting
 
