@@ -17,13 +17,13 @@ Function Get-WindowsArt()
             "        '''':::: ::::::::::::::::   ",
             "                 ''''::::::::::::   ",
             "                         ''''::::   ";
-    
+
     return $ArtArray;
 }
 
 Function Get-MacArt()
 {
-    [string[]] $ArtArray = 
+    [string[]] $ArtArray =
             "                 -/+:.              ",
             "                :++++.              ",
             "               /+++/.               ",
@@ -41,5 +41,5 @@ Function Get-MacArt()
             "     :ooooooooooooooooooo+.         ",
             "      ':+oo+/:-..-:/+o+/-           ";
 
-    return $ArtArray;    
+    return $ArtArray;
 }

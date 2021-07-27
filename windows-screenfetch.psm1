@@ -31,12 +31,12 @@ Function Screenfetch($distro)
         else {
             Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline;
         }
-        
+
         Write-Host $LineToTitleMappings[$line] -ForegroundColor Red -NoNewline;
 
         if ($line -eq 0) {
             $SplittedUserInfo = $SystemInfoCollection[$line].Split("@");
-            
+
             Write-Host $SplittedUserInfo[0] -ForegroundColor Red -NoNewline;
             Write-Host "@" -NoNewline;
             Write-Host $SplittedUserInfo[1] -ForegroundColor Red;

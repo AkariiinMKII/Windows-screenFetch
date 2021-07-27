@@ -93,7 +93,7 @@ Function Get-Shell()
 Function Get-Displays()
 {
     $Displays = New-Object System.Collections.Generic.List[System.Object];
-    
+
     $Monitors = Get-CimInstance -ClassName Win32_VideoController | Select-Object CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate;
 
     $NumMonitors = ($Monitors | Measure-Object).Count;
@@ -141,7 +141,7 @@ Function Get-Mobo()
 
 Function Get-RAM()
 {
-    $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)); 
+    $FreeRam = ([math]::Truncate((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB));
     $TotalRam = ([math]::Truncate((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB));
 
     $UsedRam = $TotalRam - $FreeRam;
@@ -167,7 +167,7 @@ Function Get-Disks()
         if ($DiskSize -gt 0) {
             $UsedDiskSize = $DiskSize - $FreeDiskSize;
             $UsedDiskPercent = "{0:F0}" -f (($UsedDiskSize / $DiskSize) * 100);
-            
+
             $CheckSize = $DiskSize / 10737418240;
 
             if ($CheckSize -gt 1) {

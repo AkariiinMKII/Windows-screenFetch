@@ -76,7 +76,7 @@ Simply run `screenfetch` command after installing the module and you should be g
 
  Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
 
-![screenshot](screenshots/mac_distro.png)  
+![screenshot](screenshots/mac_distro.png)
 
 ## Troubleshooting
 
