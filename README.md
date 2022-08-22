@@ -1,6 +1,6 @@
 # Windows screenFetch
 
-_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
+_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo. Including some enhancements from [Windows-screenFetch-fast](https://github.com/piotrpdev/Windows-screenFetch-fast)_
 
 ![screenshot](screenshots/screenfetch.png)
 
@@ -16,75 +16,59 @@ The original can be found in [KittyKatt's repository](https://github.com/KittyKa
 
 The original screenfetch requires a system that supports bash so it cannot be used on windows natively! This is a small scale project that simply "mimics" the behaviour of screenFetch in windows.
 
-**Windows screenFetch is a Powershell script, not a Bash program**. Therefore, a linux-like environment such as [Cygwin](https://www.cygwin.com/) or [MinGW](http://www.mingw.org/wiki/msys) is ***not required***. This can be run natively on windows as a Powershell script within a Powershell or command prompt console.
+**Windows screenFetch is a PowerShell script, not a Bash program**. Therefore, a linux-like environment such as [Cygwin](https://www.cygwin.com/) or [MinGW](http://www.mingw.org/wiki/msys) is ***not required***. This can be run natively on windows as a PowerShell script within a PowerShell or command prompt console.
 
 *Since this tool is only intended to run within a windows environment, no flags to invoke any Linux distribution ASCII art is supported.*
 
 ## Installation
 
-- ### Git clone
+- ### Via [Scoop](https://github.com/ScoopInstaller/Scoop)
 
-#### Step 1. Go to `Modules` directory in PowerShell path
+```PowerShell
+# Add scoop bucket
+scoop bucket add Scoop4kariiin https://github.com/AkariiinMKII/Scoop4kariiin
 
-Run following command to check path
-
-```powershell
-$env:PSModulePath -Split ";"
+# Install 
+scoop install Windows-screenFetch
 ```
 
-It is recommended to use defaule `$PROFILE` directory, you need to create one if not exists
+- ### Via git clone
 
-```powershell
+Notice that you need to install [git for windows](https://gitforwindows.org/) in advance.
+
+```PowerShell
+# Go to modules folder
 $UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}; Set-Location $UsePath
-```
 
-#### Step 2. Clone this repository
-
-Git command is available with [git for windows](https://gitforwindows.org/), or just use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
-
-```bash
+# Clone this repository
 git clone https://github.com/AkariiinMKII/Windows-screenFetch
-```
 
-**Step 3.** Set as Import-Module
-
-Ensure your PowerShell profile
-
-```powershell
+# Modify PS profile to enable auto-import
 if (!(Test-Path $PROFILE)) {New-Item $PROFILE -Type File -Force | Out-Null}
-```
-
-Append Import-Module config to `$PROFILE`
-
-```powershell
 Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
 ```
 
-Simply run `screenfetch` command after installing the module and you should be good to go.
+## Functions
 
-- ### ~~Powershell Gallery (not recommended)~~
+### `screenFetch`
 
-~~**Note** that Windows-screenfetch module in [Powershell Gallery](https://www.powershellgallery.com/packages/windows-screenfetch) is outdated, with several issues not solved.~~
+_A command performs like it in bash_
 
-~~If you were using windows-screenfetch before it was uploaded to Powershell Gallery, you will need to delete the local instance and associated environment variables before running the following install.~~
+#### `-distro <LogoName>`
 
-~~**Install-Module -Name windows-screenfetch**~~
+_Specify the ASCII logo shown_
 
-## Usage Parameters
+Possible alternatives currently is the Apple and WindowsXP, please see `AsciiArtGenerator` for possible extensions
 
- The `-distro` argument allows you to specify the ASCII logo shown
-
- Possible alternatives currently is the apple logo, please see `AsciiArtGenerator` for possible extensions
-
-![screenshot](screenshots/mac_distro.png)
+![screenshot](screenshots/alt_logo.png)
 
 ## Troubleshooting
 
 If you have followed the installation steps but you're getting the following error:
 
-```powershell
+```PowerShell
 The file C:\<yourpath>\screenfetch.ps1 is not digitally signed.
 The script will not execute on the system.
 ```
 
-A common fix is to run the powershell command `Set-ExecutionPolicy Unrestricted` in a shell with administrative privileges.
+A common fix is to run the PowerShell command `Set-ExecutionPolicy Unrestricted` in a shell with administrative privileges.

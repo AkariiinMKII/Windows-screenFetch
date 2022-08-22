@@ -1,21 +1,25 @@
-#### Screenfetch for powershell
-#### Author Julian Chow
+Function screenFetch() {
+    <#
+    .SYNOPSIS
+        A Powershell port of bash/unix screenFetch.
+    .PARAMETER Distro
+        Select an alternative logo to show.
+    #>
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false, Position = 0)]
+        [string] $Distro
+    )
 
-Function Screenfetch($distro)
-{
-    $AsciiArt = "";
+    $AsciiArt = . Get-WindowsArt;
 
-    if (-not $distro) {
-        $AsciiArt = . Get-WindowsArt;
-    }
-
-    if (([string]::Compare($distro, "mac", $true) -eq 0) -or
-        ([string]::Compare($distro, "macOS", $true) -eq 0) -or
-        ([string]::Compare($distro, "osx", $true) -eq 0)) {
-        $AsciiArt = . Get-MacArt;
-    }
-    else {
-        $AsciiArt = . Get-WindowsArt;
+    if ($Distro) {
+        if (($Distro -match 'mac') -or ($Distro -match 'osx') -or ($Distro -match 'apple')) {
+            $AsciiArt = . Get-MacArt;
+        }
+        if (($Distro -match 'oldwin') -or ($Distro -match 'win.*xp')) {
+            $AsciiArt = . Get-OldWindowsArt;
+        }
     }
 
     $SystemInfoCollection = . Get-SystemSpecifications;
@@ -26,7 +30,7 @@ Function Screenfetch($distro)
     for ($line = 0; $line -lt $NumLines; $line++) {
         if (($AsciiArt[$line].Length) -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
-            Write-Host (" " * 36) -NoNewline;
+            Write-Host (" " * 40) -NoNewline;
         }
         else {
             Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline;
