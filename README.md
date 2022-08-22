@@ -1,6 +1,6 @@
 # Windows screenFetch
 
-_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo. Including some enhancements from [Windows-screenFetch-fast](https://github.com/piotrpdev/Windows-screenFetch-fast)_
+_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
 
 ![screenshot](screenshots/screenfetch.png)
 
