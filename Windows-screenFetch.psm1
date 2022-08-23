@@ -12,16 +12,13 @@ Function screenFetch() {
         [string] $Distro
     )
 
-    $AsciiArt = . New-WinLogo;
+    $MacDistro = @("mac", "macos", "osx", "apple")
+    $WinXPDistro = @("winxp", "windowsxp", "xp", "win xp", "windows xp")
 
-    if ($Distro) {
-        $MacDistro = @("mac", "macos", "osx", "apple")
-        $WinXPDistro = @("winxp", "windowsxp", "xp", "win xp", "windows xp")
-
-        switch ($Distro) {
-            {$MacDistro -contains $Distro} {$AsciiArt = . New-MacLogo; Break}
-            {$WinXPDistro -contains $Distro} {$AsciiArt = . New-WinXPLogo; Break}
-        }
+    switch ($Distro) {
+        {$MacDistro -contains $_} {$AsciiArt = . New-MacLogo; Break}
+        {$WinXPDistro -contains $_} {$AsciiArt = . New-WinXPLogo; Break}
+        default {$AsciiArt = . New-WinLogo; Break}
     }
 
     $SystemInfoCollection = . Get-SystemSpecifications;
