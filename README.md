@@ -58,7 +58,10 @@ _A command performs like it in bash_
 
 _Specify the ASCII logo shown_
 
-Possible alternatives currently is the Apple and WindowsXP, please see `AsciiArtGenerator` for possible extensions
+Currently support the logo of Mac and Windows XP, please see `AsciiArtGenerator` for possible extensions
+
+- For Mac logo, use `mac`, `macos`, `osx`, `apple`
+- For Windows XP logo, use `winxp`, `windowsxp`, `xp`, `"win xp"`, `"windows xp"`
 
 ![screenshot](screenshots/alt_logo.png)
 

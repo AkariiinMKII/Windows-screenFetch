@@ -2,6 +2,7 @@ Function screenFetch() {
     <#
     .SYNOPSIS
         A Powershell port of bash/unix screenFetch.
+
     .PARAMETER Distro
         Select an alternative logo to show.
     #>
@@ -11,14 +12,15 @@ Function screenFetch() {
         [string] $Distro
     )
 
-    $AsciiArt = . Get-WindowsArt;
+    $AsciiArt = . New-WinLogo;
 
     if ($Distro) {
-        if (($Distro -match 'mac') -or ($Distro -match 'osx') -or ($Distro -match 'apple')) {
-            $AsciiArt = . Get-MacArt;
-        }
-        if (($Distro -match 'oldwin') -or ($Distro -match 'win.*xp')) {
-            $AsciiArt = . Get-OldWindowsArt;
+        $MacDistro = @("mac", "macos", "osx", "apple")
+        $WinXPDistro = @("winxp", "windowsxp", "xp", "win xp", "windows xp")
+
+        switch ($Distro) {
+            {$MacDistro -contains $Distro} {$AsciiArt = . New-MacLogo; Break}
+            {$WinXPDistro -contains $Distro} {$AsciiArt = . New-WinXPLogo; Break}
         }
     }
 

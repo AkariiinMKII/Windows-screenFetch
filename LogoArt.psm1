@@ -1,4 +1,4 @@
-Function Get-WindowsArt() {
+Function New-WinLogo() {
     [string[]] $ArtArray  =
             "                           ....::::     ",
             "                   ....::::::::::::     ",
@@ -20,7 +20,7 @@ Function Get-WindowsArt() {
     return $ArtArray;
 }
 
-Function Get-MacArt() {
+Function New-MacLogo() {
     [string[]] $ArtArray =
             "                   -/+:.                ",
             "                  :++++.                ",
@@ -44,7 +44,7 @@ Function Get-MacArt() {
 
 # Old windows logo from WinScreeny by Nijikokun:
 # https://github.com/Nijikokun/WinScreeny
-Function Get-OldWindowsArt() {
+Function New-WinXPLogo() {
     $esc = [char]27
     $f1 = "$esc[31m"
     $f2 = "$esc[32m"
