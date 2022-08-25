@@ -82,24 +82,36 @@ Function Get-Shell() {
 }
 
 Function Get-Displays() {
+    Add-Type -AssemblyName System.Windows.Forms
+    $AllScreens = [System.Windows.Forms.Screen]::AllScreens;
+
+    $Monitors = $AllScreens | ForEach-Object {
+        $ProcInfo = New-Object psobject
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name ScreenWidth -Value ($_.Bounds).Width
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name ScreenHeight -Value ($_.Bounds).Height
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name Primary -Value $_.Primary
+        return $ProcInfo
+    }
+
     $Displays = New-Object System.Collections.Generic.List[System.Object];
 
-    $Monitors = Get-CimInstance -ClassName Win32_VideoController;
+    $Monitors | Where-Object {$_.Primary} | ForEach-Object {
+        $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("");
+        if (!$Displays) {
+            $Displays = $Display;
+        }
+        else {
+            $Displays = ($Displays, $Display) -join("; ");
+        }
+    }
 
-    $Monitors | Where {$_.Status -eq 'OK'} | ForEach-Object {
-        $HorRes = $_.CurrentHorizontalResolution;
-        $VerRes = $_.CurrentVerticalResolution;
-        $RefRate = $_.CurrentRefreshRate;
-
-        if ($HorRes -And $VerRes -And $RefRate) {
-            $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("");
-
-            if (!$Displays) {
-                $Displays = $Display;
-            }
-            else {
-                $Displays = ($Displays, $Display) -join("; ");
-            }
+    $Monitors | Where-Object {!$_.Primary} | ForEach-Object {
+        $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("");
+        if (!$Displays) {
+            $Displays = $Display;
+        }
+        else {
+            $Displays = ($Displays, $Display) -join("; ");
         }
     }
 
@@ -116,7 +128,7 @@ Function Get-CPU() {
 }
 
 Function Get-GPU() {
-    return (Get-CimInstance -ClassName Win32_VideoController | Where {$_.Status -eq 'OK'} | ForEach-Object {($_.Name).Trim()}) -join("; ");
+    return (Get-CimInstance -ClassName Win32_VideoController | Where-Object {$_.Status -eq 'OK'} | ForEach-Object {($_.Name).Trim()}) -join("; ");
 }
 
 Function Get-Mobo() {
@@ -150,7 +162,7 @@ Function Get-Disks() {
 
     $DiskTable = Get-CimInstance -ClassName Win32_LogicalDisk;
 
-    $DiskTable | Where {$_.DriveType -eq '3'} |ForEach-Object {
+    $DiskTable | ForEach-Object {
         $DiskSize = $_.Size;
         $FreeDiskSize = $_.FreeSpace;
 
@@ -176,6 +188,13 @@ Function Get-Disks() {
         }
 
         $FormattedDisk = ($_.DeviceId.ToString(), $DiskStatus) -join(" ");
+
+        switch ($_.DriveType) {
+            2 {$FormattedDisk = ($FormattedDisk, "*Removable disk") -join(" ")}
+            4 {$FormattedDisk = ($FormattedDisk, "*Network disk") -join(" ")}
+            5 {$FormattedDisk = ($FormattedDisk, "*Compact disk") -join(" ")}
+        }
+
         $FormattedDisks.Add($FormattedDisk);
     }
 
