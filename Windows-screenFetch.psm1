@@ -21,37 +21,37 @@ Function screenFetch() {
         default {$AsciiArt = . New-WinLogo; Break}
     }
 
-    $SystemInfoCollection = . Get-SystemSpecifications;
-    $LineToTitleMappings = . Get-LineToTitleMappings;
+    $SystemInfoCollection = . Get-SystemSpecifications
+    $LineToTitleMappings = . Get-LineToTitleMappings
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $NumLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum;
+    $NumLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum
     for ($line = 0; $line -lt $NumLines; $line++) {
         if (($AsciiArt[$line].Length) -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
-            Write-Host (" " * 40) -NoNewline;
+            Write-Host (" " * 40) -NoNewline
         }
         else {
-            Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline;
+            Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline
         }
 
-        Write-Host $LineToTitleMappings[$line] -ForegroundColor Red -NoNewline;
+        Write-Host $LineToTitleMappings[$line] -ForegroundColor Red -NoNewline
 
         if ($line -eq 0) {
-            $SplittedUserInfo = $SystemInfoCollection[$line].Split("@");
+            $SplittedUserInfo = $SystemInfoCollection[$line].Split("@")
 
-            Write-Host $SplittedUserInfo[0] -ForegroundColor Red -NoNewline;
-            Write-Host "@" -NoNewline;
-            Write-Host $SplittedUserInfo[1] -ForegroundColor Red;
+            Write-Host $SplittedUserInfo[0] -ForegroundColor Red -NoNewline
+            Write-Host "@" -NoNewline
+            Write-Host $SplittedUserInfo[1] -ForegroundColor Red
         }
         elseif ($SystemInfoCollection[$line] -like '*:*') {
-            $SplittedDiskInfo = $SystemInfoCollection[$line].Split(":");
+            $SplittedDiskInfo = $SystemInfoCollection[$line].Split(":")
 
-            Write-Host ("Disk ", $SplittedDiskInfo[0], ":") -Separator "" -ForegroundColor Red -NoNewline;
-            Write-Host $SplittedDiskInfo[1];
+            Write-Host ("Disk ", $SplittedDiskInfo[0], ":") -Separator "" -ForegroundColor Red -NoNewline
+            Write-Host $SplittedDiskInfo[1]
         }
         else {
-            Write-Host $SystemInfoCollection[$line];
+            Write-Host $SystemInfoCollection[$line]
         }
     }
 }

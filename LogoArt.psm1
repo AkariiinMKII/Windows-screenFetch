@@ -15,9 +15,9 @@ Function New-WinLogo() {
             "  '''':::::::::::: ::::::::::::::::     ",
             "          '''':::: ::::::::::::::::     ",
             "                   ''''::::::::::::     ",
-            "                           ''''::::     ";
+            "                           ''''::::     "
 
-    return $ArtArray;
+    return $ArtArray
 }
 
 Function New-MacLogo() {
@@ -37,9 +37,9 @@ Function New-MacLogo() {
             "    ``syyyyyyyyyyyyyyyyyyyyyyyy+``        ",
             "     ``ossssssssssssssssssssss/          ",
             "       :ooooooooooooooooooo+.           ",
-            "        ``:+oo+/:-..-:/+o+/-             ";
+            "        ``:+oo+/:-..-:/+o+/-             "
 
-    return $ArtArray;
+    return $ArtArray
 }
 
 # Old windows logo from WinScreeny by Nijikokun:
@@ -68,5 +68,5 @@ Function New-WinXPLogo() {
     "$f4             `` $f3`:EEEEtttt::::z7          ",
     "$f3                 $f3'VEzjt:;;z>*``          "
 
-    return $ArtArray;
+    return $ArtArray
 }
