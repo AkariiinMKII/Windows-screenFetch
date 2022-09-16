@@ -89,7 +89,7 @@ Function Get-Displays() {
     $AllScreens = [System.Windows.Forms.Screen]::AllScreens
 
     $Monitors = $AllScreens | ForEach-Object {
-        $MonitorInfo = New-Object psobject
+        $MonitorInfo = New-Object PSObject
         $MonitorInfo | Add-Member -MemberType NoteProperty -Name ScreenWidth -Value ($_.Bounds).Width
         $MonitorInfo | Add-Member -MemberType NoteProperty -Name ScreenHeight -Value ($_.Bounds).Height
         $MonitorInfo | Add-Member -MemberType NoteProperty -Name Primary -Value $_.Primary
