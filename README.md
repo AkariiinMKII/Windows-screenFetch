@@ -79,3 +79,7 @@ A common fix is to run the PowerShell command `Set-ExecutionPolicy Unrestricted`
 ## Known issues
 
 - Cannot get physical resolution in `Display` area. [(#3)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/3)
+
+## Contributing
+
+Feel free to open PRs!🥳
