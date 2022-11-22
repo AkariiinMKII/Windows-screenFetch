@@ -54,11 +54,13 @@ Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
 
 _A command performs like it in bash._
 
-#### `-distro <LogoName>`
+|Parameters|Type|Mandatory|Descriptions|
+|----|:----:|:----:|----|
+|`Distro`|String|&cross;|Specify the ASCII logo shown.[1]|
+|`Help`|Switch|&cross;|Print help info.|
+|`Version`|Switch|&cross;|Print version info.|
 
-_Specify the ASCII logo shown._
-
-Currently support the logo of Mac and Windows XP, please see `AsciiArtGenerator` for possible extensions
+[1] Currently support the logo of Mac and Windows XP, please see `AsciiArtGenerator` for possible extensions
 
 - For Mac logo, use `mac`, `macos`, `osx`, `apple`
 - For Windows XP logo, use `winxp`, `windowsxp`, `xp`, `"win xp"`, `"windows xp"`
