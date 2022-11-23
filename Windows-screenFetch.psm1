@@ -23,7 +23,7 @@ Function screenFetch() {
     )
 
     $HelpInfo = @(
-        @{Parameter="screenFetch [<Parameters>]"; Description=""}
+        @{Parameter="screenFetch               "; Description="Print system information with distribution logo."}
         @{Parameter="    -Distro <String>"; Description="Specify the ASCII logo shown."}
         @{Parameter=""; Description="Currently support the logo of Mac and Windows XP,"}
         @{Parameter=""; Description="for Mac logo, use 'mac', 'macos', 'osx', 'apple',"}
