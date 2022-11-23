@@ -5,12 +5,41 @@ Function screenFetch() {
 
     .PARAMETER Distro
         Select an alternative logo to show.
+
+    .PARAMETER Help
+        Print help info.
+
+    .PARAMETER Version
+        Print version info.
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false, Position = 0)]
-        [string] $Distro
+        [string] $Distro,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [switch] $Help,
+        [Parameter(Mandatory = $false, Position = 2)]
+        [switch] $Version
     )
+
+    $HelpInfo = @(
+        @{Parameter="screenFetch               "; Description="Print system information with distribution logo."}
+        @{Parameter="    -Distro <String>"; Description="Specify the ASCII logo shown."}
+        @{Parameter=""; Description="Currently support the logo of Mac and Windows XP,"}
+        @{Parameter=""; Description="for Mac logo, use 'mac', 'macos', 'osx', 'apple',"}
+        @{Parameter=""; Description="for Windows XP logo, use 'winxp', 'windowsxp', 'xp'."}
+        @{Parameter="    -Help"; Description="Print help info."}
+        @{Parameter="    -Version"; Description="Print version info."}
+    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
+
+    if ($Help) {
+        Return $HelpInfo | Format-Table -HideTableHeaders
+    }
+
+    if ($Version) {
+        $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object Version).Version
+        Return "Windows-screenFetch $VersionInfo"
+    }
 
     $MacDistro = @("mac", "macos", "osx", "apple")
     $WinXPDistro = @("winxp", "windowsxp", "xp", "win xp", "windows xp")
@@ -55,3 +84,5 @@ Function screenFetch() {
         }
     }
 }
+
+Set-Alias Windows-screenFetch screenFetch
