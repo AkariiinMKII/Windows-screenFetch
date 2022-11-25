@@ -52,7 +52,7 @@ Add-Content -Path $PROFILE -Value "Import-Module Windows-screenFetch"
 
 ### `screenFetch`
 
-_A command performs like it in bash._
+_Print system information with distribution logo._
 
 |Parameters|Type|Mandatory|Descriptions|
 |----|:----:|:----:|----|
