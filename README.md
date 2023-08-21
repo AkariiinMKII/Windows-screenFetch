@@ -2,7 +2,7 @@
 
 _Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
 
-![Windows screenFetch](screenshots/screenfetch.png)
+![Windows screenFetch](screenshots/win10_logo.png)
 
 > ## ScreenFetch
 >
