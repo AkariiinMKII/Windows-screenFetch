@@ -2,7 +2,7 @@
 
 _Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
 
-![screenshot](screenshots/screenfetch.png)
+![Windows screenFetch](screenshots/screenFetch.png)
 
 > ## ScreenFetch
 >
@@ -60,12 +60,16 @@ _Print system information with distribution logo._
 |`Help`|Switch|&cross;|Print help info.|
 |`Version`|Switch|&cross;|Print version info.|
 
-[1] Currently support the logo of Mac and Windows XP, please see `AsciiArtGenerator` for possible extensions
+[1] Currently support the logo of Windows and macOS, please see `AsciiArtGenerator` for possible extensions
 
-- For Mac logo, use `mac`, `macos`, `osx`, `apple`
-- For Windows XP logo, use `winxp`, `windowsxp`, `xp`, `"win xp"`, `"windows xp"`
+- For Windows 10 logo, use `win10`, `windows10`
+- For Windows 11 logo, use `win11`, `windows11`
+- For Windows XP logo, use `winxp`, `windowsxp`, `xp`
+- For macOS logo, use `mac`, `macos`, `osx`, `apple`
 
-![screenshot](screenshots/alt_logo.png)
+![Windows 11 logo](screenshots/win11_logo.png)
+![Windows XP logo](screenshots/winxp_logo.png)
+![macOS logo](screenshots/macos_logo.png)
 
 ## Troubleshooting
 
