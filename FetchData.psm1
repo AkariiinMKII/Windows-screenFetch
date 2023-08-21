@@ -97,7 +97,7 @@ Function Get-Displays() {
         if ($HorRes -and $VerRes -and $RefRate) {
             $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
 
-            if (!$Displays) {
+            if (-not $Displays) {
                 $Displays = $Display
             }
             else {
