@@ -15,6 +15,7 @@ Function screenFetch() {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false, Position = 0)]
+        [Alias("Logo")]
         [string] $Distro,
         [Parameter(Mandatory = $false, Position = 1)]
         [switch] $Help,
@@ -41,13 +42,25 @@ Function screenFetch() {
         Return "Windows-screenFetch $VersionInfo"
     }
 
+    $Win10Distro = @("win10", "windows10", "win 10", "windows 10")
+    $Win11Distro = @("win11", "windows11", "win 11", "windows 11")
+    $WinXPDistro = @("winxp", "windowsxp", "win xp", "windows xp", "xp")
     $MacDistro = @("mac", "macos", "osx", "apple")
-    $WinXPDistro = @("winxp", "windowsxp", "xp", "win xp", "windows xp")
 
     switch ($Distro) {
-        {$MacDistro -contains $_} {$AsciiArt = . New-MacLogo; Break}
+        {$Win10Distro -contains $_} {$AsciiArt = . New-Win10Logo; Break}
+        {$Win11Distro -contains $_} {$AsciiArt = . New-Win11Logo; Break}
         {$WinXPDistro -contains $_} {$AsciiArt = . New-WinXPLogo; Break}
-        default {$AsciiArt = . New-WinLogo; Break}
+        {$MacDistro -contains $_} {$AsciiArt = . New-MacLogo; Break}
+        default {
+            $DetectOS = (Get-CimInstance -ClassName Win32_OperatingSystem).Caption
+            if ($DetectOS -match '10') {
+                $AsciiArt = . New-Win10Logo; Break
+            }
+            else {
+                $AsciiArt = . New-Win11Logo; Break
+            }
+        }
     }
 
     $SystemInfoCollection = . Get-SystemSpecifications

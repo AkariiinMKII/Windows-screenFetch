@@ -100,7 +100,7 @@ Function Get-Displays() {
 
     $Monitors | Where-Object {$_.Primary} | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
-        if (!$Displays) {
+        if (-not $Displays) {
             $Displays = $Display
         }
         else {
@@ -108,9 +108,9 @@ Function Get-Displays() {
         }
     }
 
-    $Monitors | Where-Object {!$_.Primary} | ForEach-Object {
+    $Monitors | Where-Object {-not $_.Primary} | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
-        if (!$Displays) {
+        if (-not $Displays) {
             $Displays = $Display
         }
         else {
