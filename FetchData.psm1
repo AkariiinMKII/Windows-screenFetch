@@ -85,36 +85,24 @@ Function Get-Shell() {
 }
 
 Function Get-Displays() {
-    Add-Type -AssemblyName System.Windows.Forms
-    $AllScreens = [System.Windows.Forms.Screen]::AllScreens
-
-    $Monitors = $AllScreens | ForEach-Object {
-        $MonitorInfo = New-Object PSObject
-        $MonitorInfo | Add-Member -MemberType NoteProperty -Name ScreenWidth -Value ($_.Bounds).Width
-        $MonitorInfo | Add-Member -MemberType NoteProperty -Name ScreenHeight -Value ($_.Bounds).Height
-        $MonitorInfo | Add-Member -MemberType NoteProperty -Name Primary -Value $_.Primary
-        $MonitorInfo
-    }
-
     $Displays = New-Object System.Collections.Generic.List[System.Object]
 
-    $Monitors | Where-Object {$_.Primary} | ForEach-Object {
-        $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
-        if (-not $Displays) {
-            $Displays = $Display
-        }
-        else {
-            $Displays = ($Displays, $Display) -join("; ")
-        }
-    }
+    $Monitors = Get-CimInstance -ClassName Win32_VideoController
 
-    $Monitors | Where-Object {-not $_.Primary} | ForEach-Object {
-        $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
-        if (-not $Displays) {
-            $Displays = $Display
-        }
-        else {
-            $Displays = ($Displays, $Display) -join("; ")
+    $Monitors | Where-Object {$_.Status -eq 'OK'} | ForEach-Object {
+        $HorRes = $_.CurrentHorizontalResolution
+        $VerRes = $_.CurrentVerticalResolution
+        $RefRate = $_.CurrentRefreshRate
+
+        if ($HorRes -and $VerRes -and $RefRate) {
+            $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
+
+            if (-not $Displays) {
+                $Displays = $Display
+            }
+            else {
+                $Displays = ($Displays, $Display) -join("; ")
+            }
         }
     }
 
