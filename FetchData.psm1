@@ -151,25 +151,84 @@ Function Get-NIC() {
     return $Adapters -join("; ")
 }
 
+Function Format-StorageSize() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int64] $Size,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [switch] $RAM
+    )
+    switch ($Size) {
+        {$_ -gt 1PB} {
+            $CalculateSizeValue = "{0:F2}" -f ($Size / 1PB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "PiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 100TB} {
+            $CalculateSizeValue = "{0:F0}" -f ($Size / 1TB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 10TB} {
+            $CalculateSizeValue = "{0:F1}" -f ($Size / 1TB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 1TB} {
+            $CalculateSizeValue = "{0:F2}" -f ($Size / 1TB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
+            Return $CalculateSize
+        }
+        {($_ -gt 100GB) -and (-not $RAM)} {
+            $CalculateSizeValue = "{0:F0}" -f ($Size / 1GB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 10GB} {
+            $CalculateSizeValue = "{0:F1}" -f ($Size / 1GB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
+            Return $CalculateSize
+        }
+        {($_ -gt 1GB) -and (-not $RAM)} {
+            $CalculateSizeValue = "{0:F2}" -f ($Size / 1GB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 1GB} {
+            $CalculateSizeValue = "{0:F1}" -f ($Size / 1GB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 1MB} {
+            $CalculateSizeValue = "{0:F0}" -f ($Size / 1MB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "MiB") -join("")
+            Return $CalculateSize
+        }
+        {$_ -gt 1KB} {
+            $CalculateSizeValue = "{0:F0}" -f ($Size / 1KB)
+            $CalculateSize = ($CalculateSizeValue.ToString(), "KiB") -join("")
+            Return $CalculateSize
+        }
+        default {
+            $CalculateSize = ($Size.ToString(), "Bytes") -join("")
+            Return $CalculateSize
+        }
+    }
+}
+
 Function Get-RAM() {
-    $FreeRam = (Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory / 1KB
-    $TotalRam = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1MB
+    $FreeRamValue = (Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory * 1KB
+    $TotalRamValue = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
 
-    $UsedRam = $TotalRam - $FreeRam
-    $UsedRamPercent = "{0:F0}" -f (($UsedRam / $TotalRam) * 100)
+    $UsedRamValue = $TotalRamValue - $FreeRamValue
+    $UsedRamPercentValue = "{0:F0}" -f (($UsedRamValue / $TotalRamValue) * 100)
+    $UsedRamPercent = ("(", $UsedRamPercentValue.ToString(), "% used)") -join("")
 
-    if ($TotalRam -ge 10KB) {
-        $UsedRam = "{0:F1}" -f ($UsedRam / 1KB)
-        $TotalRam = "{0:F1}" -f ($TotalRam / 1KB)
-        $RAMUnit = "GiB"
-    }
-    else {
-        $UsedRam = "{0:F0}" -f $UsedRam
-        $TotalRam = "{0:F0}" -f $TotalRam
-        $RAMUnit = "MiB"
-    }
+    $TotalRam = Format-StorageSize -Size $TotalRamValue -RAM
+    $UsedRam = Format-StorageSize -Size $UsedRamValue -RAM
 
-    return ($UsedRam.ToString(), "$RAMUnit / ", $TotalRam.ToString(), "$RAMUnit (", $UsedRamPercent.ToString(), "% used)") -join("")
+    return ($UsedRam, "/", $TotalRam, $UsedRamPercent) -join(" ")
 }
 
 Function Get-Disks() {
@@ -178,28 +237,21 @@ Function Get-Disks() {
     $DiskTable = Get-CimInstance -ClassName Win32_LogicalDisk
 
     $DiskTable | ForEach-Object {
-        $DiskSize = $_.Size
-        $FreeDiskSize = $_.FreeSpace
+        $DiskSizeValue = $_.Size
+        $FreeDiskSizeValue = $_.FreeSpace
 
-        if ($DiskSize -gt 0) {
-            $UsedDiskSize = $DiskSize - $FreeDiskSize
-            $UsedDiskPercent = "{0:F0}" -f (($UsedDiskSize / $DiskSize) * 100)
+        if ($DiskSizeValue -gt 0) {
+            $UsedDiskSizeValue = $DiskSizeValue - $FreeDiskSizeValue
+            $UsedDiskPercentValue = "{0:F0}" -f (($UsedDiskSizeValue / $DiskSizeValue) * 100)
+            $UsedDiskPercent = ("(", $UsedDiskPercentValue.ToString(), "% used)") -join("")
 
-            if ($DiskSize -gt 10GB) {
-                $DiskSizeValue = "{0:F0}" -f ($DiskSize / 1GB)
-                $UsedDiskSizeValue = "{0:F0}" -f ($UsedDiskSize / 1GB)
-                $DiskUnit = "GiB"
-            }
-            else {
-                $DiskSizeValue = "{0:F0}" -f ($DiskSize / 1MB)
-                $UsedDiskSizeValue = "{0:F0}" -f ($UsedDiskSize / 1MB)
-                $DiskUnit = "MiB"
-            }
+            $DiskSize = Format-StorageSize -Size $DiskSizeValue
+            $UsedDiskSize = Format-StorageSize -Size $UsedDiskSizeValue
 
-            $DiskStatus = ($UsedDiskSizeValue.ToString(), $DiskUnit, " / ", $DiskSizeValue.ToString(), $DiskUnit, " (", $UsedDiskPercent.ToString(), "% used)") -join("")
+            $DiskStatus = ($UsedDiskSize, "/", $DiskSize, $UsedDiskPercent) -join(" ")
         }
         else {
-            $DiskStatus = "Empty"
+            $DiskStatus = "*Empty"
         }
 
         $FormattedDisk = ($_.DeviceId.ToString(), $DiskStatus) -join(" ")
