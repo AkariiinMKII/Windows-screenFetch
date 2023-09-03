@@ -56,7 +56,7 @@ _Print system information with distribution logo._
 
 |Parameters|Type|Mandatory|Descriptions|
 |----|:----:|:----:|----|
-|`Distro`|String|&cross;|Specify the ASCII logo shown.[1]|
+|`Distro`|String|&cross;|Specify the ASCII logo shown in left side.[1]|
 |`Help`|Switch|&cross;|Print help info.|
 |`Version`|Switch|&cross;|Print version info.|
 
