@@ -44,8 +44,8 @@ Notice that you need to install [git for windows](https://gitforwindows.org/) in
 # Go to modules folder
 $UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}; Set-Location $UsePath
 
-# Clone this repository
-git clone https://github.com/AkariiinMKII/Windows-screenFetch
+# Clone this repository and switch to this branch
+git clone https://github.com/AkariiinMKII/Windows-screenFetch; Set-Location .\Windows-screenFetch\; git checkout use-native-resolution
 
 # Modify PS profile to enable auto-import
 if (!(Test-Path $PROFILE)) {New-Item $PROFILE -Type File -Force | Out-Null}
