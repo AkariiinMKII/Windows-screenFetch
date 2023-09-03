@@ -114,8 +114,23 @@ Function Get-Displays() {
     }
 }
 
+Function Format-ClockSpeed() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int64] $Speed
+    )
+    if ($Speed -gt 1000) {
+        $FormatSpeedValue = "{0:F1}" -f ($Speed / 1000)
+        Return ($FormatSpeedValue.ToString(), "GHz") -join("")
+    }
+    else {
+        Return ($Speed.ToString(), "MHz") -join("")
+    }
+}
+
 Function Get-CPU() {
-    return (Get-CimInstance -ClassName Win32_Processor -Property Name | ForEach-Object {($_.Name).Trim()}) -join("; ")
+    return (Get-CimInstance -ClassName Win32_Processor | ForEach-Object {($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ")}) -join("; ")
 }
 
 Function Get-GPU() {
