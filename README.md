@@ -29,7 +29,11 @@ _Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch)
 scoop bucket add Scoop4kariiin https://github.com/AkariiinMKII/Scoop4kariiin
 
 # Install
-scoop install Windows-screenFetch
+scoop install Windows-screenFetch-alt
+# This version returns native resolution and refresh rate in "Display"
+# but may cause other bugs, see https://github.com/AkariiinMKII/Windows-screenFetch/issues/3
+# use following command if you need main branch version (will uninstall this version)
+# scoop install Windows-screenFetch
 ```
 
 - ### Via git clone
