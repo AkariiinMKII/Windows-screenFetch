@@ -63,8 +63,7 @@ Function screenFetch() {
             $DetectOS = (Get-CimInstance -ClassName Win32_OperatingSystem).Caption
             if ($DetectOS -match '10') {
                 $AsciiArt = . New-Win10Logo; Break
-            }
-            else {
+            } else {
                 $AsciiArt = . New-Win11Logo; Break
             }
         }
@@ -74,34 +73,30 @@ Function screenFetch() {
     $LineToTitleMappings = . Get-LineToTitleMappings
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $NumLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum
-    for ($line = 0; $line -lt $NumLines; $line++) {
-        if (($AsciiArt[$line].Length) -eq 0) {
+    $numLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum
+    for ($line = 0; $line -lt $numLines; $line++) {
+        if ($AsciiArt[$line].Length -eq 0) {
             # Write some whitespaces to sync the left spacing with the asciiart.
             Write-Host (" " * 40) -NoNewline
-        }
-        else {
+        } else {
             Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline
         }
 
-        Write-Host $LineToTitleMappings[$line] -ForegroundColor Red -NoNewline
+        $contentLine = ($LineToTitleMappings[$line], $SystemInfoCollection[$line]) -join("")
 
-        if ($line -eq 0) {
-            $SplittedUserInfo = $SystemInfoCollection[$line].Split("@")
-
-            Write-Host $SplittedUserInfo[0] -ForegroundColor Red -NoNewline
-            Write-Host "@" -NoNewline
-            Write-Host $SplittedUserInfo[1] -ForegroundColor Red
+        $regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
+        if ($contentLine.Length -gt 0) {
+            $captureLine = $regex.Matches($contentLine)
+            $captureLine | ForEach-Object {
+                if ($_.Groups[1].Value -eq "Default") {
+                    Write-Host $_.Groups[2].Value -NoNewline
+                } else {
+                    Write-Host $_.Groups[2].Value -ForegroundColor $_.Groups[1].Value -NoNewline
+                }
+            }
         }
-        elseif ($SystemInfoCollection[$line] -like '*:*') {
-            $SplittedDiskInfo = $SystemInfoCollection[$line].Split(":")
-
-            Write-Host ("Disk ", $SplittedDiskInfo[0], ":") -Separator "" -ForegroundColor Red -NoNewline
-            Write-Host $SplittedDiskInfo[1]
-        }
-        else {
-            Write-Host $SystemInfoCollection[$line]
-        }
+        
+        Write-Host ""
     }
 }
 
