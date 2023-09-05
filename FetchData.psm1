@@ -103,19 +103,19 @@ Function Get-Displays() {
 
             if (-not $Displays) {
                 $Displays = $Display
-            }
-            else {
+            } else {
                 $Displays = ($Displays, $Display) -join("; ")
             }
         }
     }
 
     if ($Displays) {
-        return $Displays
+        $infoDisplays = $Displays
+    } else {
+        $infoDisplays = "NONE"
     }
-    else {
-        return "NONE"
-    }
+
+    return ("<inDefault>", $infoDisplays, "</inDefault>") -join("")
 }
 
 Function Format-ClockSpeed() {
