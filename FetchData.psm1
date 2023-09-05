@@ -105,7 +105,7 @@ Function Get-Displays() {
         if ($HorRes -and $VerRes -and $RefRate) {
             $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
 
-            $Displays = ($Displays, $display | Where-Object { '' -ne $_ }) -join("; ")
+            $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
         }
     }
 
