@@ -40,16 +40,18 @@ Function screenFetch() {
             @{Parameter=""; Description=""}
             @{Parameter="GitHub repository page:"; Description="https://github.com/AkariiinMKII/Windows-screenFetch"}
         )
-        ForEach ($lineHelpInfo in $HelpInfo) {
+
+        $printHelpInfo = ForEach ($lineHelpInfo in $HelpInfo) {
             New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
         }
 
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        Return $printHelpInfo | Format-Table -HideTableHeaders
     }
 
     if ($Version) {
-        $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object Version).Version
-        Return "Windows-screenFetch $VersionInfo"
+        $printVersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object Version).Version
+
+        Return "Windows-screenFetch $printVersionInfo"
     }
 
     $Win10Distro = @("win10", "windows10", "win 10", "windows 10")
@@ -98,7 +100,7 @@ Function screenFetch() {
                 }
             }
         }
-        
+
         Write-Host ""
     }
 }
