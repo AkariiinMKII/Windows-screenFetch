@@ -89,12 +89,12 @@ Function screenFetch() {
 
         $Regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
         if ($contentLine.Length -gt 0) {
-            $captureLine = $Regex.Matches($contentLine)
-            ForEach ($contentMatch in $captureLine) {
-                if ($contentMatch.Groups[1].Value -eq "Default") {
-                    Write-Host $contentMatch.Groups[2].Value -NoNewline
+            $contentRegexMatch = $Regex.Matches($contentLine)
+            ForEach ($contentCaptured in $contentRegexMatch) {
+                if ($contentCaptured.Groups[1].Value -eq "Default") {
+                    Write-Host $contentCaptured.Groups[2].Value -NoNewline
                 } else {
-                    Write-Host $contentMatch.Groups[2].Value -ForegroundColor $contentMatch.Groups[1].Value -NoNewline
+                    Write-Host $contentCaptured.Groups[2].Value -ForegroundColor $contentCaptured.Groups[1].Value -NoNewline
                 }
             }
         }
