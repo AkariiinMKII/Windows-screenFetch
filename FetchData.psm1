@@ -109,13 +109,13 @@ Function Get-Displays() {
     $Monitors | Where-Object { $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
         
-        $Displays = ($Displays, $display | Where-Object { '' -ne $_ }) -join("; ")
+        $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
     $Monitors | Where-Object { -not $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
         
-        $Displays = ($Displays, $display | Where-Object { '' -ne $_ }) -join("; ")
+        $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
     if ($Displays) {
