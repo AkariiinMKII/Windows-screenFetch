@@ -28,10 +28,10 @@ Function screenFetch() {
             @{Parameter="screenFetch            "; Description="Print system information with distribution logo."}
             @{Parameter=""; Description=""}
             @{Parameter="    -Distro <String>"; Description="Specify the ASCII logo shown in left side."}
-            @{Parameter=""; Description="Currently support the logo of Windows and macOS,"}
-            @{Parameter=""; Description="for Windows 10 logo, use 'win10', 'windows10',"}
-            @{Parameter=""; Description="for Windows 11 logo, use 'win11', 'windows11',"}
-            @{Parameter=""; Description="for Windows XP logo, use 'winxp', 'windowsxp', 'xp',"}
+            @{Parameter=""; Description="Currently support the logo of Windows and macOS."}
+            @{Parameter=""; Description="for Windows 10 logo, use 'win10', 'windows10';"}
+            @{Parameter=""; Description="for Windows 11 logo, use 'win11', 'windows11';"}
+            @{Parameter=""; Description="for Windows XP logo, use 'winxp', 'windowsxp', 'xp';"}
             @{Parameter=""; Description="for macOS logo, use 'mac', 'macos', 'osx', 'apple'."}
             @{Parameter=""; Description=""}
             @{Parameter="    -Help"; Description="Print help info."}
@@ -60,10 +60,10 @@ Function screenFetch() {
     $MacDistro = @("mac", "macos", "osx", "apple")
 
     switch ($Distro) {
-        {$Win10Distro -contains $_} {$AsciiArt = . New-Win10Logo; Break}
-        {$Win11Distro -contains $_} {$AsciiArt = . New-Win11Logo; Break}
-        {$WinXPDistro -contains $_} {$AsciiArt = . New-WinXPLogo; Break}
-        {$MacDistro -contains $_} {$AsciiArt = . New-MacLogo; Break}
+        { $Win10Distro -contains $_ } { $AsciiArt = . New-Win10Logo; Break }
+        { $Win11Distro -contains $_ } { $AsciiArt = . New-Win11Logo; Break }
+        { $WinXPDistro -contains $_ } { $AsciiArt = . New-WinXPLogo; Break }
+        { $MacDistro -contains $_ } { $AsciiArt = . New-MacLogo; Break }
         default {
             $DetectOS = (Get-CimInstance -ClassName Win32_OperatingSystem).Caption
             if ($DetectOS -match '10') {
