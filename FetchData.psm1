@@ -106,8 +106,7 @@ Function Get-Displays() {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
         if (-not $Displays) {
             $Displays = $Display
-        }
-        else {
+        } else {
             $Displays = ($Displays, $Display) -join("; ")
         }
     }
@@ -116,18 +115,18 @@ Function Get-Displays() {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
         if (-not $Displays) {
             $Displays = $Display
-        }
-        else {
+        } else {
             $Displays = ($Displays, $Display) -join("; ")
         }
     }
 
     if ($Displays) {
-        return $Displays
+        $infoDisplays = $Displays
+    } else {
+        $infoDisplays = "NONE"
     }
-    else {
-        return "NONE"
-    }
+
+    return ("<inDefault>", $infoDisplays, "</inDefault>") -join("")
 }
 
 Function Format-ClockSpeed() {
