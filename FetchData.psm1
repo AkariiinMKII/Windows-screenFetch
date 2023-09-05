@@ -95,12 +95,12 @@ Function Get-Shell() {
 Function Get-Displays() {
     $Displays = New-Object System.Collections.Generic.List[System.Object]
 
-    $Monitors = Get-CimInstance -ClassName Win32_VideoController
+    $tableMonitors = Get-CimInstance -ClassName Win32_VideoController | Where-Object {$_.Status -eq 'OK'}
 
-    $Monitors | Where-Object {$_.Status -eq 'OK'} | ForEach-Object {
-        $HorRes = $_.CurrentHorizontalResolution
-        $VerRes = $_.CurrentVerticalResolution
-        $RefRate = $_.CurrentRefreshRate
+    ForEach ($selectMonitor in $tableMonitors) {
+        $HorRes = $selectMonitor.CurrentHorizontalResolution
+        $VerRes = $selectMonitor.CurrentVerticalResolution
+        $RefRate = $selectMonitor.CurrentRefreshRate
 
         if ($HorRes -and $VerRes -and $RefRate) {
             $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
