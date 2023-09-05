@@ -39,7 +39,10 @@ Function screenFetch() {
             @{Parameter="    -Version"; Description="Print version info."}
             @{Parameter=""; Description=""}
             @{Parameter="GitHub repository page:"; Description="https://github.com/AkariiinMKII/Windows-screenFetch"}
-        ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
+        )
+        ForEach ($lineHelpInfo in $HelpInfo) {
+            New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
+        }
 
         Return $HelpInfo | Format-Table -HideTableHeaders
     }
@@ -87,11 +90,11 @@ Function screenFetch() {
         $Regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
         if ($contentLine.Length -gt 0) {
             $captureLine = $Regex.Matches($contentLine)
-            $captureLine | ForEach-Object {
-                if ($_.Groups[1].Value -eq "Default") {
-                    Write-Host $_.Groups[2].Value -NoNewline
+            ForEach ($contentMatch in $captureLine) {
+                if ($contentMatch.Groups[1].Value -eq "Default") {
+                    Write-Host $contentMatch.Groups[2].Value -NoNewline
                 } else {
-                    Write-Host $_.Groups[2].Value -ForegroundColor $_.Groups[1].Value -NoNewline
+                    Write-Host $contentMatch.Groups[2].Value -ForegroundColor $contentMatch.Groups[1].Value -NoNewline
                 }
             }
         }

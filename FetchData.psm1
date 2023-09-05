@@ -29,11 +29,11 @@ Function Get-SystemSpecifications() {
         $NIC,
         $RAM
 
-    foreach ($Disk in $Disks) {
+    ForEach ($Disk in $Disks) {
         [void]$SystemInfoCollection.Add(("<inRed>Disk </inRed>", $Disk) -join(""))
     }
 
-    return $SystemInfoCollection
+    Return $SystemInfoCollection
 }
 
 Function Get-LineToTitleMappings() {
@@ -52,27 +52,30 @@ Function Get-LineToTitleMappings() {
         11 = "<inRed>RAM: </inRed>"
     }
 
-    return $TitleMappings
+    Return $TitleMappings
 }
 
 Function Get-UserInformation() {
-    return ("<inRed>", $env:USERNAME, "</inRed>", "<inDefault>@</inDefault>", "<inRed>", [System.Net.Dns]::GetHostName(), "</inRed>") -join("")
+    Return ("<inRed>", $env:USERNAME, "</inRed>", "<inDefault>@</inDefault>", "<inRed>", [System.Net.Dns]::GetHostName(), "</inRed>") -join("")
 }
 
 Function Get-DividingLine() {
     $DividingLine = "-" * ($env:USERNAME.Length + [System.Net.Dns]::GetHostName().Length + 1)
-    return ("<inDefault>", $DividingLine, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $DividingLine, "</inDefault>") -join("")
 }
 
 Function Get-OS() {
     $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
     $infoOS = ($GCIOS.Caption, $GCIOS.OSArchitecture) -join(" ")
-    return ("<inDefault>", $infoOS, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoOS, "</inDefault>") -join("")
 }
 
 Function Get-Version() {
     $infoOSVersion = (Get-CimInstance -ClassName Win32_OperatingSystem).Version
-    return ("<inDefault>", $infoOSVersion, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoOSVersion, "</inDefault>") -join("")
 }
 
 Function Get-SystemUptime() {
@@ -80,12 +83,13 @@ Function Get-SystemUptime() {
     $Uptime = (([DateTime]$GCIOS.LocalDateTime) - ([DateTime]$GCIOS.LastBootUpTime))
     $infoUptime = ($Uptime.Days.ToString(), "d ", $Uptime.Hours.ToString(), "h ", $Uptime.Minutes.ToString(), "m ", $Uptime.Seconds.ToString(), "s") -join("")
 
-    return ("<inDefault>", $infoUptime, "</inDefault>") -join("")
+    Return ("<inDefault>", $infoUptime, "</inDefault>") -join("")
 }
 
 Function Get-Shell() {
     $infoPSVersion = ("PowerShell", $PSVersionTable.PSVersion.ToString()) -join(" ")
-    return ("<inDefault>", $infoPSVersion, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoPSVersion, "</inDefault>") -join("")
 }
 
 Function Get-Displays() {
@@ -126,7 +130,7 @@ Function Get-Displays() {
         $infoDisplays = "NONE"
     }
 
-    return ("<inDefault>", $infoDisplays, "</inDefault>") -join("")
+    Return ("<inDefault>", $infoDisplays, "</inDefault>") -join("")
 }
 
 Function Format-ClockSpeed() {
@@ -145,23 +149,26 @@ Function Format-ClockSpeed() {
 
 Function Get-CPU() {
     $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object {($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ")}) -join("; ")
-    return ("<inDefault>", $infoCPU, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoCPU, "</inDefault>") -join("")
 }
 
 Function Get-GPU() {
     $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object {$_.Status -eq 'OK'} | ForEach-Object {($_.Name).Trim()}) -join("; ")
-    return ("<inDefault>", $infoGPU, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoGPU, "</inDefault>") -join("")
 }
 
 Function Get-Mobo() {
     $Motherboard = Get-CimInstance -ClassName Win32_BaseBoard
     $infoMobo = ($Motherboard.Manufacturer, $Motherboard.Product) -join(" ")
-    return ("<inDefault>", $infoMobo, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoMobo, "</inDefault>") -join("")
 }
 
 Function Get-NIC() {
-    $AdaptersTable = Get-NetAdapter -Physical | Where-Object {$_.Status -eq "Up"}
-    $Adapters = $AdaptersTable | ForEach-Object {
+    $tableAdapters = Get-NetAdapter -Physical | Where-Object {$_.Status -eq "Up"}
+    $Adapters = $tableAdapters | ForEach-Object {
         $InterfaceDesc = ($_.InterfaceDescription).Trim()
         $AdapterName = ($_.Name).Trim()
         $AdapterSpeed = ($_.LinkSpeed).Trim().Split(" ") -join("")
@@ -169,7 +176,8 @@ Function Get-NIC() {
     }
 
     $infoNIC = $Adapters -join("; ")
-    return ("<inDefault>", $infoNIC, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoNIC, "</inDefault>") -join("")
 }
 
 Function Format-StorageSize() {
@@ -250,17 +258,18 @@ Function Get-RAM() {
     $UsedRam = Format-StorageSize -Size $UsedRamValue -RAM
 
     $infoRAM = ($UsedRam, "/", $TotalRam, $UsedRamPercent) -join(" ")
-    return ("<inDefault>", $infoRAM, "</inDefault>") -join("")
+
+    Return ("<inDefault>", $infoRAM, "</inDefault>") -join("")
 }
 
 Function Get-Disks() {
     $infoDisks = New-Object System.Collections.Generic.List[System.Object]
 
-    $DiskTable = Get-CimInstance -ClassName Win32_LogicalDisk
+    $tableDisks = Get-CimInstance -ClassName Win32_LogicalDisk
 
-    $DiskTable | ForEach-Object {
-        $DiskSizeValue = $_.Size
-        $FreeDiskSizeValue = $_.FreeSpace
+    ForEach ($selectDisk in $tableDisks) {
+        $DiskSizeValue = $selectDisk.Size
+        $FreeDiskSizeValue = $selectDisk.FreeSpace
 
         if ($DiskSizeValue -gt 0) {
             $UsedDiskSizeValue = $DiskSizeValue - $FreeDiskSizeValue
@@ -275,9 +284,9 @@ Function Get-Disks() {
             $DiskStatus = "*Empty"
         }
 
-        $FormattedDisk = ("<inRed>", $_.DeviceId.ToString(), " </inRed>", "<inDefault>", $DiskStatus, "</inDefault>") -join("")
+        $FormattedDisk = ("<inRed>", $selectDisk.DeviceId.ToString(), " </inRed>", "<inDefault>", $DiskStatus, "</inDefault>") -join("")
 
-        switch ($_.DriveType) {
+        switch ($selectDisk.DriveType) {
             2 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Removable disk</inDarkGray>") -join("")}
             4 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Network disk</inDarkGray>") -join("")}
             5 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Compact disk</inDarkGray>") -join("")}
@@ -286,5 +295,5 @@ Function Get-Disks() {
         $infoDisks.Add($FormattedDisk)
     }
 
-    return $infoDisks
+    Return $infoDisks
 }
