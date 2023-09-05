@@ -106,22 +106,16 @@ Function Get-Displays() {
 
     $Displays = New-Object System.Collections.Generic.List[System.Object]
 
-    $Monitors | Where-Object {$_.Primary} | ForEach-Object {
+    $Monitors | Where-Object { $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
-        if (-not $Displays) {
-            $Displays = $Display
-        } else {
-            $Displays = ($Displays, $Display) -join("; ")
-        }
+        
+        $Displays = ($Displays, $display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
-    $Monitors | Where-Object {-not $_.Primary} | ForEach-Object {
+    $Monitors | Where-Object { -not $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
-        if (-not $Displays) {
-            $Displays = $Display
-        } else {
-            $Displays = ($Displays, $Display) -join("; ")
-        }
+        
+        $Displays = ($Displays, $display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
     if ($Displays) {
