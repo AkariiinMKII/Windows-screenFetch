@@ -154,7 +154,7 @@ Function Get-CPU() {
 }
 
 Function Get-GPU() {
-    $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object {$_.Status -eq 'OK'} | ForEach-Object {($_.Name).Trim()}) -join("; ")
+    $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object { 'OK' -eq $_.Status } | ForEach-Object {($_.Name).Trim()}) -join("; ")
 
     Return ("<inDefault>", $infoGPU, "</inDefault>") -join("")
 }
@@ -167,7 +167,7 @@ Function Get-Mobo() {
 }
 
 Function Get-NIC() {
-    $tableAdapters = Get-NetAdapter -Physical | Where-Object {$_.Status -eq "Up"}
+    $tableAdapters = Get-NetAdapter -Physical | Where-Object { 'Up' -eq $_.Status }
     $Adapters = $tableAdapters | ForEach-Object {
         $InterfaceDesc = ($_.InterfaceDescription).Trim()
         $AdapterName = ($_.Name).Trim()
