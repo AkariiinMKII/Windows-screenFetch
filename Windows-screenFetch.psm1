@@ -84,9 +84,9 @@ Function screenFetch() {
 
         $contentLine = ($LineToTitleMappings[$line], $SystemInfoCollection[$line]) -join("")
 
-        $regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
+        $Regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
         if ($contentLine.Length -gt 0) {
-            $captureLine = $regex.Matches($contentLine)
+            $captureLine = $Regex.Matches($contentLine)
             $captureLine | ForEach-Object {
                 if ($_.Groups[1].Value -eq "Default") {
                     Write-Host $_.Groups[2].Value -NoNewline
