@@ -121,7 +121,7 @@ Function Get-Displays() {
     if ($Displays) {
         $infoDisplays = $Displays
     } else {
-        $infoDisplays = "NONE"
+        $infoDisplays = "None"
     }
 
     Return ("<inDefault>", $infoDisplays, "</inDefault>") -join("")
@@ -264,7 +264,7 @@ Function Get-Disks() {
 
             $DiskStatus = ($UsedDiskSize, "/", $DiskSize, $UsedDiskPercent) -join(" ")
         } else {
-            $DiskStatus = "*Empty"
+            $DiskStatus = "Empty"
         }
 
         $FormattedDisk = ("<inRed>", $selectDisk.DeviceId.ToString(), " </inRed>", "<inDefault>", $DiskStatus, "</inDefault>") -join("")
