@@ -142,13 +142,13 @@ Function Format-ClockSpeed() {
 }
 
 Function Get-CPU() {
-    $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object {($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ")}) -join("; ")
+    $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object { ($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ") }) -join("; ")
 
     Return ("<inDefault>", $infoCPU, "</inDefault>") -join("")
 }
 
 Function Get-GPU() {
-    $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object { 'OK' -eq $_.Status } | ForEach-Object {($_.Name).Trim()}) -join("; ")
+    $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
 
     Return ("<inDefault>", $infoGPU, "</inDefault>") -join("")
 }
@@ -183,59 +183,48 @@ Function Format-StorageSize() {
         [switch] $RAM
     )
     switch ($Size) {
-        {$_ -gt 1PB} {
-            $CalculateSizeValue = "{0:F2}" -f ($Size / 1PB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "PiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 1PB } {
+            $calculateSize = "{0:F2}" -f ($Size / 1PB)
+            Return ($calculateSize.ToString(), "PiB") -join("")
         }
-        {$_ -gt 100TB} {
-            $CalculateSizeValue = "{0:F0}" -f ($Size / 1TB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 100TB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        {$_ -gt 10TB} {
-            $CalculateSizeValue = "{0:F1}" -f ($Size / 1TB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 10TB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        {$_ -gt 1TB} {
-            $CalculateSizeValue = "{0:F2}" -f ($Size / 1TB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "TiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 1TB } {
+            $calculateSize = "{0:F2}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        {($_ -gt 100GB) -and (-not $RAM)} {
-            $CalculateSizeValue = "{0:F0}" -f ($Size / 1GB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
-            Return $CalculateSize
+        { ($_ -gt 100GB) -and (-not $RAM) } {
+            $calculateSize = "{0:F0}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        {$_ -gt 10GB} {
-            $CalculateSizeValue = "{0:F1}" -f ($Size / 1GB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 10GB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        {($_ -gt 1GB) -and (-not $RAM)} {
-            $CalculateSizeValue = "{0:F2}" -f ($Size / 1GB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
-            Return $CalculateSize
+        { ($_ -gt 1GB) -and (-not $RAM) } {
+            $calculateSize = "{0:F2}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        {$_ -gt 1GB} {
-            $CalculateSizeValue = "{0:F1}" -f ($Size / 1GB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "GiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 1GB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        {$_ -gt 1MB} {
-            $CalculateSizeValue = "{0:F0}" -f ($Size / 1MB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "MiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 1MB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1MB)
+            Return ($calculateSize.ToString(), "MiB") -join("")
         }
-        {$_ -gt 1KB} {
-            $CalculateSizeValue = "{0:F0}" -f ($Size / 1KB)
-            $CalculateSize = ($CalculateSizeValue.ToString(), "KiB") -join("")
-            Return $CalculateSize
+        { $_ -gt 1KB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1KB)
+            Return ($calculateSize.ToString(), "KiB") -join("")
         }
         default {
-            $CalculateSize = ($Size.ToString(), "Bytes") -join("")
-            Return $CalculateSize
+            Return ($Size.ToString(), "Bytes") -join("")
         }
     }
 }
@@ -281,9 +270,9 @@ Function Get-Disks() {
         $FormattedDisk = ("<inRed>", $selectDisk.DeviceId.ToString(), " </inRed>", "<inDefault>", $DiskStatus, "</inDefault>") -join("")
 
         switch ($selectDisk.DriveType) {
-            2 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Removable disk</inDarkGray>") -join("")}
-            4 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Network disk</inDarkGray>") -join("")}
-            5 {$FormattedDisk = ($FormattedDisk, "<inDarkGray> Compact disk</inDarkGray>") -join("")}
+            2 { $FormattedDisk = ($FormattedDisk, "<inDarkGray> Removable disk</inDarkGray>") -join("") }
+            4 { $FormattedDisk = ($FormattedDisk, "<inDarkGray> Network disk</inDarkGray>") -join("") }
+            5 { $FormattedDisk = ($FormattedDisk, "<inDarkGray> Compact disk</inDarkGray>") -join("") }
         }
 
         $infoDisks.Add($FormattedDisk)
