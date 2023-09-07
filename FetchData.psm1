@@ -1,19 +1,20 @@
 Function Get-SystemSpecifications() {
+    $fetchOS = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property Caption, OSArchitecture, Version, LocalDateTime, LastBootUpTime, FreePhysicalMemory
+    $fetchVC = Get-CimInstance -ClassName Win32_VideoController | Select-Object -Property Name, Status, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate
 
     $UserInfo = Get-UserInformation
     $DividingLine = Get-DividingLine
-    $OS = Get-OS
-    $Version = Get-Version
-    $Uptime = Get-SystemUptime
+    $OS = Get-OS -FetchOS $fetchOS
+    $Version = Get-Version -FetchOS $fetchOS
+    $Uptime = Get-SystemUptime -FetchOS $fetchOS
     $Shell = Get-Shell
     $Motherboard = Get-Mobo
     $CPU = Get-CPU
-    $GPU = Get-GPU
-    $Displays = Get-Displays
+    $GPU = Get-GPU -FetchVC $fetchVC
+    $Displays = Get-Displays -FetchVC $fetchVC
     $NIC = Get-NIC
-    $RAM = Get-RAM
+    $RAM = Get-RAM -FetchOS $fetchOS
     $Disks = Get-Disks
-
 
     [System.Collections.ArrayList] $SystemInfoCollection =
         $UserInfo,
@@ -66,21 +67,34 @@ Function Get-DividingLine() {
 }
 
 Function Get-OS() {
-    $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
-    $infoOS = ($GCIOS.Caption, $GCIOS.OSArchitecture) -join(" ")
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchOS
+    )
+    $infoOS = ($FetchOS.Caption, $FetchOS.OSArchitecture) -join(" ")
 
     Return ("<inDefault>", $infoOS, "</inDefault>") -join("")
 }
 
 Function Get-Version() {
-    $infoOSVersion = (Get-CimInstance -ClassName Win32_OperatingSystem).Version
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchOS
+    )
+    $infoOSVersion = $FetchOS.Version
 
     Return ("<inDefault>", $infoOSVersion, "</inDefault>") -join("")
 }
 
 Function Get-SystemUptime() {
-    $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
-    $Uptime = (([DateTime]$GCIOS.LocalDateTime) - ([DateTime]$GCIOS.LastBootUpTime))
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchOS
+    )
+    $Uptime = (([DateTime]$FetchOS.LocalDateTime) - ([DateTime]$FetchOS.LastBootUpTime))
     $infoUptime = ($Uptime.Days.ToString(), "d ", $Uptime.Hours.ToString(), "h ", $Uptime.Minutes.ToString(), "m ", $Uptime.Seconds.ToString(), "s") -join("")
 
     Return ("<inDefault>", $infoUptime, "</inDefault>") -join("")
@@ -93,9 +107,14 @@ Function Get-Shell() {
 }
 
 Function Get-Displays() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchVC
+    )
     $Displays = New-Object System.Collections.Generic.List[System.Object]
 
-    $tableMonitors = Get-CimInstance -ClassName Win32_VideoController | Where-Object { 'OK' -eq $_.Status }
+    $tableMonitors = $FetchVC | Where-Object { 'OK' -eq $_.Status }
 
     ForEach ($selectMonitor in $tableMonitors) {
         $HorRes = $selectMonitor.CurrentHorizontalResolution
@@ -139,7 +158,12 @@ Function Get-CPU() {
 }
 
 Function Get-GPU() {
-    $infoGPU = (Get-CimInstance -ClassName Win32_VideoController | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchVC
+    )
+    $infoGPU = ($FetchVC | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
 
     Return ("<inDefault>", $infoGPU, "</inDefault>") -join("")
 }
@@ -221,7 +245,12 @@ Function Format-StorageSize() {
 }
 
 Function Get-RAM() {
-    $FreeRamValue = (Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory * 1KB
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $FetchOS
+    )
+    $FreeRamValue = $FetchOS.FreePhysicalMemory * 1KB
     $TotalRamValue = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
 
     $UsedRamValue = $TotalRamValue - $FreeRamValue
