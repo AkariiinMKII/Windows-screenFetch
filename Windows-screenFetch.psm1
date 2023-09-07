@@ -74,7 +74,9 @@ Function screenFetch() {
         }
     }
 
-    $SystemInfoCollection = . Get-SystemSpecifications
+    $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
+
+    $SystemInfoCollection = . Get-SystemSpecifications -GCIOS $GCIOS
     $LineToTitleMappings = . Get-LineToTitleMappings
 
     # Iterate over all lines from the SystemInfoCollection to display all information

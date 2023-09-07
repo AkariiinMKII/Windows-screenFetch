@@ -1,19 +1,22 @@
 Function Get-SystemSpecifications() {
-
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $GCIOS
+    )
     $UserInfo = Get-UserInformation
     $DividingLine = Get-DividingLine
-    $OS = Get-OS
-    $Version = Get-Version
-    $Uptime = Get-SystemUptime
+    $OS = Get-OS -GCIOS $GCIOS
+    $Version = Get-Version -GCIOS $GCIOS
+    $Uptime = Get-SystemUptime -GCIOS $GCIOS
     $Shell = Get-Shell
     $Motherboard = Get-Mobo
     $CPU = Get-CPU
     $GPU = Get-GPU
     $Displays = Get-Displays
     $NIC = Get-NIC
-    $RAM = Get-RAM
+    $RAM = Get-RAM -GCIOS $GCIOS
     $Disks = Get-Disks
-
 
     [System.Collections.ArrayList] $SystemInfoCollection =
         $UserInfo,
@@ -66,20 +69,33 @@ Function Get-DividingLine() {
 }
 
 Function Get-OS() {
-    $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $GCIOS
+    )
     $infoOS = ($GCIOS.Caption, $GCIOS.OSArchitecture) -join(" ")
 
     Return ("<inDefault>", $infoOS, "</inDefault>") -join("")
 }
 
 Function Get-Version() {
-    $infoOSVersion = (Get-CimInstance -ClassName Win32_OperatingSystem).Version
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $GCIOS
+    )
+    $infoOSVersion = $GCIOS.Version
 
     Return ("<inDefault>", $infoOSVersion, "</inDefault>") -join("")
 }
 
 Function Get-SystemUptime() {
-    $GCIOS = Get-CimInstance -ClassName Win32_OperatingSystem
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $GCIOS
+    )
     $Uptime = (([DateTime]$GCIOS.LocalDateTime) - ([DateTime]$GCIOS.LastBootUpTime))
     $infoUptime = ($Uptime.Days.ToString(), "d ", $Uptime.Hours.ToString(), "h ", $Uptime.Minutes.ToString(), "m ", $Uptime.Seconds.ToString(), "s") -join("")
 
@@ -108,13 +124,13 @@ Function Get-Displays() {
 
     $Monitors | Where-Object { $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString(), " (Primary)") -join("")
-        
+
         $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
     $Monitors | Where-Object { -not $_.Primary } | ForEach-Object {
         $Display = ($_.ScreenWidth.ToString(), " x ", $_.ScreenHeight.ToString()) -join("")
-        
+
         $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
     }
 
@@ -230,7 +246,12 @@ Function Format-StorageSize() {
 }
 
 Function Get-RAM() {
-    $FreeRamValue = (Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory * 1KB
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $GCIOS
+    )
+    $FreeRamValue = $GCIOS.FreePhysicalMemory * 1KB
     $TotalRamValue = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
 
     $UsedRamValue = $TotalRamValue - $FreeRamValue
