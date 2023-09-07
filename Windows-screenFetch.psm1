@@ -49,7 +49,7 @@ Function screenFetch() {
     }
 
     if ($Version) {
-        $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object Version).Version
+        $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object -Property Version).Version
 
         Return "Windows-screenFetch $VersionInfo"
     }
