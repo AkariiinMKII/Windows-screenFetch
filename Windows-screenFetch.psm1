@@ -77,8 +77,14 @@ Function screenFetch() {
     $SystemInfoCollection = . Get-SystemSpecifications
     $LineToTitleMappings = . Get-LineToTitleMappings
 
+    $Regex = [regex] "\<\/(\w*)::(.+?)\/\>"
+    $ColorStamp = @(
+        "Black", "DarkRed", "DarkGreen", "DarkYellow", "DarkBlue", "DarkMagenta", "DarkCyan", "Gray",
+        "DarkGray", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"
+    )
+
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $numLines = (($SystemInfoCollection.Count, $AsciiArt.Count) | Measure-Object -Maximum).Maximum
+    $numLines = ((($SystemInfoCollection.Count + 3), $AsciiArt.Count) | Measure-Object -Maximum).Maximum
     for ($line = 0; $line -lt $numLines; $line++) {
         if (0 -eq $AsciiArt[$line].Length) {
             # Write some whitespaces to sync the left spacing with the asciiart.
@@ -89,15 +95,26 @@ Function screenFetch() {
 
         $contentLine = ($LineToTitleMappings[$line], $SystemInfoCollection[$line]) -join("")
 
-        $Regex = [regex] "\<in(\w+)\>(.+?)\<\/in\w+\>"
         if ($contentLine.Length -gt 0) {
             $contentRegexMatch = $Regex.Matches($contentLine)
             ForEach ($contentCaptured in $contentRegexMatch) {
-                if ('Default' -eq $contentCaptured.Groups[1].Value) {
-                    Write-Host $contentCaptured.Groups[2].Value -NoNewline
-                } else {
+                if ($ColorStamp -contains $contentCaptured.Groups[1].Value) {
                     Write-Host $contentCaptured.Groups[2].Value -ForegroundColor $contentCaptured.Groups[1].Value -NoNewline
+                } else {
+                    Write-Host $contentCaptured.Groups[2].Value -NoNewline
                 }
+            }
+        }
+
+        if (($SystemInfoCollection.Count + 1) -eq $line) {
+            ForEach ($numColor in 0..7) {
+                Write-Host "   " -BackgroundColor $ColorStamp[$numColor] -NoNewline
+            }
+        }
+
+        if (($SystemInfoCollection.Count + 2) -eq $line) {
+            ForEach ($numColor in 8..15) {
+                Write-Host "   " -BackgroundColor $ColorStamp[$numColor] -NoNewline
             }
         }
 
