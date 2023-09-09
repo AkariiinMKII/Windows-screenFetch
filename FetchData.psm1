@@ -288,9 +288,12 @@ Function Get-Disks() {
         $FormattedDisk = ("</Red::", $selectDisk.DeviceId.ToString(), " />", "</::", $DiskStatus, "/>") -join("")
 
         switch ($selectDisk.DriveType) {
-            2 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Removable disk/>") -join("") }
-            4 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Network disk/>") -join("") }
-            5 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Compact disk/>") -join("") }
+            0 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Unknown/>") -join("") }
+            1 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: No Root Directory/>") -join("") }
+            2 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Removable Disk/>") -join("") }
+            4 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Network Drive/>") -join("") }
+            5 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Compact Disc/>") -join("") }
+            6 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: RAM Disk/>") -join("") }
         }
 
         $infoDisks.Add($FormattedDisk)
