@@ -84,16 +84,16 @@ Function screenFetch() {
     )
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $numLines = ((($SystemInfoCollection.Count + 3), $AsciiArt.Count) | Measure-Object -Maximum).Maximum
-    for ($line = 0; $line -lt $numLines; $line++) {
-        if (0 -eq $AsciiArt[$line].Length) {
-            # Write some whitespaces to sync the left spacing with the asciiart.
+    $totalLines = ((($SystemInfoCollection.Count + 2), ($AsciiArt.Count - 1)) | Measure-Object -Maximum).Maximum
+    ForEach ($numLine in 0..$totalLines) {
+        if (0 -eq $AsciiArt[$numLine].Length) {
+            # Write some whitespaces to sync the left spacing with the AsciiArt.
             Write-Host (" " * 40) -NoNewline
         } else {
-            Write-Host $AsciiArt[$line] -ForegroundColor Cyan -NoNewline
+            Write-Host $AsciiArt[$numLine] -ForegroundColor Cyan -NoNewline
         }
 
-        $contentLine = ($LineToTitleMappings[$line], $SystemInfoCollection[$line]) -join("")
+        $contentLine = ($LineToTitleMappings[$numLine], $SystemInfoCollection[$numLine]) -join("")
 
         if ($contentLine.Length -gt 0) {
             $contentRegexMatch = $Regex.Matches($contentLine)
@@ -106,13 +106,13 @@ Function screenFetch() {
             }
         }
 
-        if (($SystemInfoCollection.Count + 1) -eq $line) {
+        if (($SystemInfoCollection.Count + 1) -eq $numLine) {
             ForEach ($numColor in 0..7) {
                 Write-Host "   " -BackgroundColor $ColorStamp[$numColor] -NoNewline
             }
         }
 
-        if (($SystemInfoCollection.Count + 2) -eq $line) {
+        if (($SystemInfoCollection.Count + 2) -eq $numLine) {
             ForEach ($numColor in 8..15) {
                 Write-Host "   " -BackgroundColor $ColorStamp[$numColor] -NoNewline
             }
