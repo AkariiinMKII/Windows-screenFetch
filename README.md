@@ -1,8 +1,13 @@
 # Windows screenFetch
 
-_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
+[![License](https://img.shields.io/github/license/AkariiinMKII/Windows-screenFetch?label=License)](https://github.com/AkariiinMKII/Windows-screenFetch/blob/main/LICENSE)
+![Language](https://img.shields.io/badge/Language-PowerShell-blue)
+![Supported Platform](https://img.shields.io/badge/Supported_Platform-Windows_10\/11-blue)
+![Repo Size](https://img.shields.io/github/repo-size/AkariiinMKII/Windows-screenFetch?label=Repo%20Size)
 
-![Windows screenFetch](screenshots/win10_logo.png)
+![Windows screenFetch](.screenshots/win10_logo.png)
+
+_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
 
 > ## ScreenFetch
 >
@@ -71,9 +76,9 @@ _Print system information with distribution logo._
 - For Windows XP logo, use `winxp`, `windowsxp`, `xp`
 - For macOS logo, use `mac`, `macos`, `osx`, `apple`
 
-![Windows 11 logo](screenshots/win11_logo.png)
-![Windows XP logo](screenshots/winxp_logo.png)
-![macOS logo](screenshots/macos_logo.png)
+![Windows 11 logo](.screenshots/win11_logo.png)
+![Windows XP logo](.screenshots/winxp_logo.png)
+![macOS logo](.screenshots/macos_logo.png)
 
 ## Troubleshooting
 
