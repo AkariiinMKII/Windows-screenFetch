@@ -1,6 +1,6 @@
 Function New-Win10Logo() {
     [string[]] $ArtArray  =
-        "                                        ",
+        "",
         "                           ....::::     ",
         "                   ....::::::::::::     ",
         "          ....:::: ::::::::::::::::     ",
@@ -16,15 +16,14 @@ Function New-Win10Logo() {
         "  '''':::::::::::: ::::::::::::::::     ",
         "          '''':::: ::::::::::::::::     ",
         "                   ''''::::::::::::     ",
-        "                           ''''::::     ",
-        "                                        "
+        "                           ''''::::     "
 
     return $ArtArray
 }
 
 Function New-Win11Logo() {
     [string[]] $ArtArray =
-        "                                        ",
+        "",
         "  .::::::::::::::: :::::::::::::::.     ",
         "  :::::::::::::::: ::::::::::::::::     ",
         "  :::::::::::::::: ::::::::::::::::     ",
@@ -40,8 +39,7 @@ Function New-Win11Logo() {
         "  :::::::::::::::: ::::::::::::::::     ",
         "  :::::::::::::::: ::::::::::::::::     ",
         "  :::::::::::::::: ::::::::::::::::     ",
-        "   ''''''''''''''' '''''''''''''''      ",
-        "                                        "
+        "   ''''''''''''''' '''''''''''''''      "
 
     return $ArtArray
 }
@@ -55,7 +53,7 @@ Function New-WinXPLogo() {
     $f3 = "$esc[34m"
     $f4 = "$esc[33m"
     [string[]] $ArtArray =
-        "                                        ",
+        "",
         "$f1         ,.=:^!^!t3Z3z.,                ",
         "$f1        :tt:::tt333EE3                  ",
         "$f1        Et:::ztt33EEE  $f2@Ee.,      ..,   ",
@@ -71,15 +69,14 @@ Function New-WinXPLogo() {
         "$f4  E::::::::zt33L $f3@EEEtttt::::z3F        ",
         "$f4 {3=*^``````'*4E3) $f3;EEEtttt:::::tZ``        ",
         "$f4             `` $f3`:EEEEtttt::::z7          ",
-        "$f3                 $f3'VEzjt:;;z>*``          ",
-        "                                        "
+        "$f3                 $f3'VEzjt:;;z>*``          "
 
     return $ArtArray
 }
 
 Function New-MacLogo() {
     [string[]] $ArtArray =
-        "                                        ",
+        "",
         "                   -/+:.                ",
         "                  :++++.                ",
         "                 /+++/.                 ",
@@ -95,8 +92,7 @@ Function New-MacLogo() {
         "    ``syyyyyyyyyyyyyyyyyyyyyyyy+``        ",
         "     ``ossssssssssssssssssssss/          ",
         "       :ooooooooooooooooooo+.           ",
-        "        ``:+oo+/:-..-:/+o+/-             ",
-        "                                        "
+        "        ``:+oo+/:-..-:/+o+/-             "
 
     return $ArtArray
 }
