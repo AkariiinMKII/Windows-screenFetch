@@ -84,7 +84,7 @@ Function screenFetch() {
     )
 
     # Iterate over all lines from the SystemInfoCollection to display all information
-    $totalLines = ((($SystemInfoCollection.Count + 2), ($AsciiArt.Count - 1)) | Measure-Object -Maximum).Maximum
+    $totalLines = ((($SystemInfoCollection.Count + 2), $AsciiArt.Count) | Measure-Object -Maximum).Maximum
     ForEach ($numLine in 0..$totalLines) {
         if (0 -eq $AsciiArt[$numLine].Length) {
             # Write some whitespaces to sync the left spacing with the AsciiArt.
