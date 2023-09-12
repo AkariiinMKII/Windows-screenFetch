@@ -128,7 +128,7 @@ Function Get-GPU() {
 Function Get-Displays() {
     $infoDisplays = New-Object System.Collections.Generic.List[System.Object]
 
-    $fetchMonitors = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorListedSupportedSourceModes
+    $fetchMonitors = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorListedSupportedSourceModes -ErrorAction SilentlyContinue
 
     ForEach ($selectMonitor in $fetchMonitors) {
         $supportedResolutions = $selectMonitor.MonitorSourceModes | Select-Object HorizontalActivePixels, VerticalActivePixels, VerticalRefreshRateNumerator, VerticalRefreshRateDenominator
