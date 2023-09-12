@@ -105,6 +105,26 @@ Function Get-Shell() {
     Return ("</::", $infoPSVersion, "/>") -join("")
 }
 
+Function Get-Mobo() {
+    $fetchBaseBoard = Get-CimInstance -ClassName Win32_BaseBoard
+    $infoMobo = ($fetchBaseBoard.Manufacturer, $fetchBaseBoard.Product) -join(" ")
+
+    Return ("</::", $infoMobo, "/>") -join("")
+}
+
+Function Get-CPU() {
+    $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object { ($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ") }) -join("; ")
+
+    Return ("</::", $infoCPU, "/>") -join("")
+}
+
+Function Get-GPU() {
+    $fetchVC = Get-CimInstance -ClassName Win32_VideoController
+    $infoGPU = ($FetchVC | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
+
+    Return ("</::", $infoGPU, "/>") -join("")
+}
+
 Function Get-Displays() {
     $infoDisplays = New-Object System.Collections.Generic.List[System.Object]
 
@@ -130,26 +150,6 @@ Function Get-Displays() {
     }
 
     Return ("</::", $infoDisplays, "/>") -join("")
-}
-
-Function Get-CPU() {
-    $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object { ($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ") }) -join("; ")
-
-    Return ("</::", $infoCPU, "/>") -join("")
-}
-
-Function Get-GPU() {
-    $fetchVC = Get-CimInstance -ClassName Win32_VideoController
-    $infoGPU = ($FetchVC | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
-
-    Return ("</::", $infoGPU, "/>") -join("")
-}
-
-Function Get-Mobo() {
-    $fetchMotherboard = Get-CimInstance -ClassName Win32_BaseBoard
-    $infoMobo = ($fetchMotherboard.Manufacturer, $fetchMotherboard.Product) -join(" ")
-
-    Return ("</::", $infoMobo, "/>") -join("")
 }
 
 Function Get-NIC() {

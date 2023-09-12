@@ -24,7 +24,7 @@ Function screenFetch() {
     )
 
     if ($Help) {
-        $groupHelpInfo = @(
+        $generateHelpInfo = @(
             @{ Parameter = "screenFetch            "; Description = "Print system information with distribution logo." }
             @{ Parameter = ""; Description = "" }
             @{ Parameter = "    -Distro <String>"; Description = "Specify the ASCII logo shown in left side." }
@@ -41,7 +41,7 @@ Function screenFetch() {
             @{ Parameter = "GitHub repository page:"; Description = "https://github.com/AkariiinMKII/Windows-screenFetch" }
         )
 
-        $HelpInfo = ForEach ($lineHelpInfo in $groupHelpInfo) {
+        $HelpInfo = ForEach ($lineHelpInfo in $generateHelpInfo) {
             New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
         }
 
