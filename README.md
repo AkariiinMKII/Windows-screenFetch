@@ -34,11 +34,7 @@ _Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch)
 scoop bucket add Scoop4kariiin https://github.com/AkariiinMKII/Scoop4kariiin
 
 # Install
-scoop install Windows-screenFetch
-# This version returns native resolution and refresh rate in "Display"
-# but may cause other bugs, see https://github.com/AkariiinMKII/Windows-screenFetch/issues/3
-# use following command if you need another version (will uninstall current branch version)
-# scoop install Windows-screenFetch-alt
+scoop install Scoop4kariiin/Windows-screenFetch
 ```
 
 - ### Via git clone
@@ -93,7 +89,7 @@ A common fix is to run the PowerShell command `Set-ExecutionPolicy Unrestricted`
 
 ## Known issues
 
-- Cannot get native resolution in `Display` area. [(#3)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/3)
+- ~~Cannot get native resolution in `Display` area. [(#3)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/3)~~ Fixed 🥳
 
 ## Contributing
 

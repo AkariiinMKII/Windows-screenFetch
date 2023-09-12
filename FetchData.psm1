@@ -1,6 +1,5 @@
 Function Get-SystemSpecifications() {
     $fetchOS = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property Caption, OSArchitecture, Version, LocalDateTime, LastBootUpTime, FreePhysicalMemory
-    $fetchVC = Get-CimInstance -ClassName Win32_VideoController | Select-Object -Property Name, Status, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate
 
     $UserInfo = Get-UserInformation
     $DividingLine = Get-DividingLine
@@ -10,8 +9,8 @@ Function Get-SystemSpecifications() {
     $Shell = Get-Shell
     $Motherboard = Get-Mobo
     $CPU = Get-CPU
-    $GPU = Get-GPU -FetchVC $fetchVC
-    $Displays = Get-Displays -FetchVC $fetchVC
+    $GPU = Get-GPU
+    $Displays = Get-Displays
     $NIC = Get-NIC
     $RAM = Get-RAM -FetchOS $fetchOS
     $Disks = Get-Disks
@@ -61,9 +60,9 @@ Function Get-UserInformation() {
 }
 
 Function Get-DividingLine() {
-    $DividingLine = "-" * ($env:USERNAME.Length + [System.Net.Dns]::GetHostName().Length + 1)
+    $generateDividingLine = "-" * ($env:USERNAME.Length + [System.Net.Dns]::GetHostName().Length + 1)
 
-    Return ("</::", $DividingLine, "/>") -join("")
+    Return ("</::", $generateDividingLine, "/>") -join("")
 }
 
 Function Get-OS() {
@@ -94,8 +93,8 @@ Function Get-SystemUptime() {
         [Parameter(Mandatory = $true, Position = 0)]
         $FetchOS
     )
-    $Uptime = (([DateTime]$FetchOS.LocalDateTime) - ([DateTime]$FetchOS.LastBootUpTime))
-    $infoUptime = ($Uptime.Days.ToString(), "d ", $Uptime.Hours.ToString(), "h ", $Uptime.Minutes.ToString(), "m ", $Uptime.Seconds.ToString(), "s") -join("")
+    $fetchUptime = (([DateTime]$FetchOS.LocalDateTime) - ([DateTime]$FetchOS.LastBootUpTime))
+    $infoUptime = ($fetchUptime.Days.ToString(), "d ", $fetchUptime.Hours.ToString(), "h ", $fetchUptime.Minutes.ToString(), "m ", $fetchUptime.Seconds.ToString(), "s") -join("")
 
     Return ("</::", $infoUptime, "/>") -join("")
 }
@@ -106,49 +105,11 @@ Function Get-Shell() {
     Return ("</::", $infoPSVersion, "/>") -join("")
 }
 
-Function Get-Displays() {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        $FetchVC
-    )
-    $Displays = New-Object System.Collections.Generic.List[System.Object]
+Function Get-Mobo() {
+    $fetchBaseBoard = Get-CimInstance -ClassName Win32_BaseBoard
+    $infoMobo = ($fetchBaseBoard.Manufacturer, $fetchBaseBoard.Product) -join(" ")
 
-    $tableMonitors = $FetchVC | Where-Object { 'OK' -eq $_.Status }
-
-    ForEach ($selectMonitor in $tableMonitors) {
-        $HorRes = $selectMonitor.CurrentHorizontalResolution
-        $VerRes = $selectMonitor.CurrentVerticalResolution
-        $RefRate = $selectMonitor.CurrentRefreshRate
-
-        if ($HorRes -and $VerRes -and $RefRate) {
-            $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
-
-            $Displays = ($Displays, $Display | Where-Object { '' -ne $_ }) -join("; ")
-        }
-    }
-
-    if ($Displays) {
-        $infoDisplays = $Displays
-    } else {
-        $infoDisplays = "None"
-    }
-
-    Return ("</::", $infoDisplays, "/>") -join("")
-}
-
-Function Format-ClockSpeed() {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        [int64] $Speed
-    )
-    if ($Speed -gt 1000) {
-        $FormatSpeedValue = "{0:F1}" -f ($Speed / 1000)
-        Return ($FormatSpeedValue.ToString(), "GHz") -join("")
-    } else {
-        Return ($Speed.ToString(), "MHz") -join("")
-    }
+    Return ("</::", $infoMobo, "/>") -join("")
 }
 
 Function Get-CPU() {
@@ -158,26 +119,42 @@ Function Get-CPU() {
 }
 
 Function Get-GPU() {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        $FetchVC
-    )
+    $fetchVC = Get-CimInstance -ClassName Win32_VideoController
     $infoGPU = ($FetchVC | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
 
     Return ("</::", $infoGPU, "/>") -join("")
 }
 
-Function Get-Mobo() {
-    $Motherboard = Get-CimInstance -ClassName Win32_BaseBoard
-    $infoMobo = ($Motherboard.Manufacturer, $Motherboard.Product) -join(" ")
+Function Get-Displays() {
+    $infoDisplays = New-Object System.Collections.Generic.List[System.Object]
 
-    Return ("</::", $infoMobo, "/>") -join("")
+    $fetchMonitors = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorListedSupportedSourceModes
+
+    ForEach ($selectMonitor in $fetchMonitors) {
+        $supportedResolutions = $selectMonitor.MonitorSourceModes | Select-Object HorizontalActivePixels, VerticalActivePixels, VerticalRefreshRateNumerator, VerticalRefreshRateDenominator
+        $maxResolution = $supportedResolutions | Sort-Object -Property { $_.HorizontalActivePixels * $_.VerticalActivePixels } | Select-Object -Last 1
+
+        $HorRes = $maxResolution.HorizontalActivePixels
+        $VerRes = $maxResolution.VerticalActivePixels
+        $RefRate = "{0:F0}" -f ($maxResolution.VerticalRefreshRateNumerator / $maxResolution.VerticalRefreshRateDenominator)
+
+        if ($HorRes -and $VerRes -and $RefRate) {
+            $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
+
+            $infoDisplays = ($infoDisplays, $Display | Where-Object { '' -ne $_ }) -join("; ")
+        }
+    }
+
+    if (-not $infoDisplays) {
+        $infoDisplays = "None"
+    }
+
+    Return ("</::", $infoDisplays, "/>") -join("")
 }
 
 Function Get-NIC() {
-    $tableAdapters = Get-NetAdapter -Physical | Where-Object { 'Up' -eq $_.Status }
-    $Adapters = $tableAdapters | ForEach-Object {
+    $fetchAdapters = Get-NetAdapter -Physical | Where-Object { 'Up' -eq $_.Status }
+    $Adapters = $fetchAdapters | ForEach-Object {
         $InterfaceDesc = ($_.InterfaceDescription).Trim()
         $AdapterName = ($_.Name).Trim()
         $AdapterSpeed = ($_.LinkSpeed).Trim().Split(" ") -join("")
@@ -187,61 +164,6 @@ Function Get-NIC() {
     $infoNIC = $Adapters -join("; ")
 
     Return ("</::", $infoNIC, "/>") -join("")
-}
-
-Function Format-StorageSize() {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        [int64] $Size,
-        [Parameter(Mandatory = $false, Position = 1)]
-        [switch] $RAM
-    )
-    switch ($Size) {
-        { $_ -gt 1PB } {
-            $calculateSize = "{0:F2}" -f ($Size / 1PB)
-            Return ($calculateSize.ToString(), "PiB") -join("")
-        }
-        { $_ -gt 100TB } {
-            $calculateSize = "{0:F0}" -f ($Size / 1TB)
-            Return ($calculateSize.ToString(), "TiB") -join("")
-        }
-        { $_ -gt 10TB } {
-            $calculateSize = "{0:F1}" -f ($Size / 1TB)
-            Return ($calculateSize.ToString(), "TiB") -join("")
-        }
-        { $_ -gt 1TB } {
-            $calculateSize = "{0:F2}" -f ($Size / 1TB)
-            Return ($calculateSize.ToString(), "TiB") -join("")
-        }
-        { ($_ -gt 100GB) -and (-not $RAM) } {
-            $calculateSize = "{0:F0}" -f ($Size / 1GB)
-            Return ($calculateSize.ToString(), "GiB") -join("")
-        }
-        { $_ -gt 10GB } {
-            $calculateSize = "{0:F1}" -f ($Size / 1GB)
-            Return ($calculateSize.ToString(), "GiB") -join("")
-        }
-        { ($_ -gt 1GB) -and (-not $RAM) } {
-            $calculateSize = "{0:F2}" -f ($Size / 1GB)
-            Return ($calculateSize.ToString(), "GiB") -join("")
-        }
-        { $_ -gt 1GB } {
-            $calculateSize = "{0:F1}" -f ($Size / 1GB)
-            Return ($calculateSize.ToString(), "GiB") -join("")
-        }
-        { $_ -gt 1MB } {
-            $calculateSize = "{0:F0}" -f ($Size / 1MB)
-            Return ($calculateSize.ToString(), "MiB") -join("")
-        }
-        { $_ -gt 1KB } {
-            $calculateSize = "{0:F0}" -f ($Size / 1KB)
-            Return ($calculateSize.ToString(), "KiB") -join("")
-        }
-        default {
-            Return ($Size.ToString(), "Bytes") -join("")
-        }
-    }
 }
 
 Function Get-RAM() {
@@ -257,8 +179,8 @@ Function Get-RAM() {
     $UsedRamPercentValue = "{0:F0}" -f (($UsedRamValue / $TotalRamValue) * 100)
     $UsedRamPercent = ("(", $UsedRamPercentValue.ToString(), "% used)") -join("")
 
-    $TotalRam = Format-StorageSize -Size $TotalRamValue -RAM
-    $UsedRam = Format-StorageSize -Size $UsedRamValue -RAM
+    $TotalRam = Format-StorageSize -Size $TotalRamValue -isRAM
+    $UsedRam = Format-StorageSize -Size $UsedRamValue -isRAM
 
     $infoRAM = ($UsedRam, "/", $TotalRam, $UsedRamPercent) -join(" ")
 
@@ -268,9 +190,9 @@ Function Get-RAM() {
 Function Get-Disks() {
     $infoDisks = New-Object System.Collections.Generic.List[System.Object]
 
-    $tableDisks = Get-CimInstance -ClassName Win32_LogicalDisk
+    $fetchDisks = Get-CimInstance -ClassName Win32_LogicalDisk
 
-    ForEach ($selectDisk in $tableDisks) {
+    ForEach ($selectDisk in $fetchDisks) {
         $DiskSizeValue = $selectDisk.Size
         $FreeDiskSizeValue = $selectDisk.FreeSpace
 
@@ -302,4 +224,73 @@ Function Get-Disks() {
     }
 
     Return $infoDisks
+}
+
+Function Format-ClockSpeed() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int64] $Speed
+    )
+    if ($Speed -gt 1000) {
+        $FormatSpeedValue = "{0:F1}" -f ($Speed / 1000)
+        Return ($FormatSpeedValue.ToString(), "GHz") -join("")
+    } else {
+        Return ($Speed.ToString(), "MHz") -join("")
+    }
+}
+
+Function Format-StorageSize() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int64] $Size,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [switch] $isRAM
+    )
+    switch ($Size) {
+        { $_ -gt 1PB } {
+            $calculateSize = "{0:F2}" -f ($Size / 1PB)
+            Return ($calculateSize.ToString(), "PiB") -join("")
+        }
+        { $_ -gt 100TB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
+        }
+        { $_ -gt 10TB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
+        }
+        { $_ -gt 1TB } {
+            $calculateSize = "{0:F2}" -f ($Size / 1TB)
+            Return ($calculateSize.ToString(), "TiB") -join("")
+        }
+        { ($_ -gt 100GB) -and (-not $isRAM) } {
+            $calculateSize = "{0:F0}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
+        }
+        { $_ -gt 10GB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
+        }
+        { ($_ -gt 1GB) -and (-not $isRAM) } {
+            $calculateSize = "{0:F2}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
+        }
+        { $_ -gt 1GB } {
+            $calculateSize = "{0:F1}" -f ($Size / 1GB)
+            Return ($calculateSize.ToString(), "GiB") -join("")
+        }
+        { $_ -gt 1MB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1MB)
+            Return ($calculateSize.ToString(), "MiB") -join("")
+        }
+        { $_ -gt 1KB } {
+            $calculateSize = "{0:F0}" -f ($Size / 1KB)
+            Return ($calculateSize.ToString(), "KiB") -join("")
+        }
+        default {
+            Return ($Size.ToString(), "Bytes") -join("")
+        }
+    }
 }
