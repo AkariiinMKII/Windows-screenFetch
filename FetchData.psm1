@@ -10,7 +10,7 @@ Function Get-SystemSpecifications() {
     $Motherboard = Get-Mobo
     $CPU = Get-CPU
     $GPU = Get-GPU
-    $Displays = Get-Displays
+    $Monitors = Get-Monitors
     $NIC = Get-NIC
     $RAM = Get-RAM -FetchOS $fetchOS
     $Disks = Get-Disks
@@ -25,7 +25,7 @@ Function Get-SystemSpecifications() {
         $Motherboard,
         $CPU,
         $GPU,
-        $Displays,
+        $Monitors,
         $NIC,
         $RAM
 
@@ -47,7 +47,7 @@ Function Get-LineToTitleMappings() {
         6 = "</Red::Motherboard: />"
         7 = "</Red::CPU: />"
         8 = "</Red::GPU: />"
-        9 = "</Red::Display: />"
+        9 = "</Red::Monitor: />"
         10 = "</Red::NIC: />"
         11 = "</Red::RAM: />"
     }
@@ -125,31 +125,36 @@ Function Get-GPU() {
     Return ("</::", $infoGPU, "/>") -join("")
 }
 
-Function Get-Displays() {
-    $infoDisplays = New-Object System.Collections.Generic.List[System.Object]
+Function Get-Monitors() {
+    $infoMonitors = @()
 
-    $fetchMonitors = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorListedSupportedSourceModes -ErrorAction SilentlyContinue
+    $fetchMonitorID = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorID -ErrorAction SilentlyContinue
+    $fetchResolutions = Get-CimInstance -Namespace "root\wmi" -Class WmiMonitorListedSupportedSourceModes -ErrorAction SilentlyContinue
 
-    ForEach ($selectMonitor in $fetchMonitors) {
-        $supportedResolutions = $selectMonitor.MonitorSourceModes | Select-Object HorizontalActivePixels, VerticalActivePixels, VerticalRefreshRateNumerator, VerticalRefreshRateDenominator
+    ForEach ($selectMonitor in $fetchMonitorID) {
+        $selectInstanceName = $selectMonitor.InstanceName
+
+        $MonitorName = ($selectMonitor.UserFriendlyName -ne 0 | ForEach-Object { [char]$_ }) -join("")
+
+        $pairResolutions = $fetchResolutions | Where-Object { $selectInstanceName -eq $_.InstanceName }
+        $supportedResolutions = $pairResolutions.MonitorSourceModes | Select-Object HorizontalActivePixels, VerticalActivePixels, VerticalRefreshRateNumerator, VerticalRefreshRateDenominator
         $maxResolution = $supportedResolutions | Sort-Object -Property { $_.HorizontalActivePixels * $_.VerticalActivePixels } | Select-Object -Last 1
 
         $HorRes = $maxResolution.HorizontalActivePixels
         $VerRes = $maxResolution.VerticalActivePixels
         $RefRate = "{0:F0}" -f ($maxResolution.VerticalRefreshRateNumerator / $maxResolution.VerticalRefreshRateDenominator)
 
-        if ($HorRes -and $VerRes -and $RefRate) {
-            $Display = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
+        $infoResolution = ($HorRes.ToString(), " x ", $VerRes.ToString(), " @ ", $RefRate.ToString(), "Hz") -join("")
+        $infoMonitor = ($MonitorName, " (", $infoResolution, ")") -join("")
 
-            $infoDisplays = ($infoDisplays, $Display | Where-Object { '' -ne $_ }) -join("; ")
-        }
+        $infoMonitors = ($infoMonitors, $infoMonitor | Where-Object { '' -ne $_ }) -join("; ")
     }
 
-    if (-not $infoDisplays) {
-        $infoDisplays = "None"
+    if (-not $infoMonitors) {
+        $infoMonitors = "None"
     }
 
-    Return ("</::", $infoDisplays, "/>") -join("")
+    Return ("</::", $infoMonitors, "/>") -join("")
 }
 
 Function Get-NIC() {
