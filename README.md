@@ -89,7 +89,8 @@ A common fix is to run the PowerShell command `Set-ExecutionPolicy Unrestricted`
 
 ## Known issues
 
-- Please report "Get-CimInstance : Not supported" error here. [(#7)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/7)
+- Cannot detect attached monitors. [(#8)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/8)
+- "Get-CimInstance : Not supported" error. [(#7)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/7)
 - ~~Cannot get native resolution in `Display` area. [(#3)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/3)~~ Fixed 🥳
 
 ## Contributing
