@@ -83,11 +83,9 @@ Function screenFetch() {
         "DarkGray", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"
     )
 
-    # Iterate over all lines from the SystemInfoCollection to display all information
     $totalLines = ((($SystemInfoCollection.Count + 2), $AsciiArt.Count) | Measure-Object -Maximum).Maximum
     ForEach ($numLine in 0..$totalLines) {
         if (0 -eq $AsciiArt[$numLine].Length) {
-            # Write some whitespaces to sync the left spacing with the AsciiArt.
             Write-Host (" " * 40) -NoNewline
         } else {
             Write-Host $AsciiArt[$numLine] -ForegroundColor Cyan -NoNewline
