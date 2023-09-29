@@ -237,7 +237,7 @@ Function Format-ClockSpeed() {
         [Parameter(Mandatory = $true, Position = 0)]
         [int64] $Speed
     )
-    if ($Speed -gt 1000) {
+    if ($Speed -ge 1000) {
         $FormatSpeedValue = "{0:F1}" -f ($Speed / 1000)
         Return ($FormatSpeedValue.ToString(), "GHz") -join("")
     } else {
@@ -254,43 +254,43 @@ Function Format-StorageSize() {
         [switch] $isRAM
     )
     switch ($Size) {
-        { $_ -gt 1PB } {
+        { $_ -ge 1PB } {
             $calculateSize = "{0:F2}" -f ($Size / 1PB)
             Return ($calculateSize.ToString(), "PiB") -join("")
         }
-        { $_ -gt 100TB } {
+        { $_ -ge 100TB } {
             $calculateSize = "{0:F0}" -f ($Size / 1TB)
             Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        { $_ -gt 10TB } {
+        { $_ -ge 10TB } {
             $calculateSize = "{0:F1}" -f ($Size / 1TB)
             Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        { $_ -gt 1TB } {
+        { $_ -ge 1TB } {
             $calculateSize = "{0:F2}" -f ($Size / 1TB)
             Return ($calculateSize.ToString(), "TiB") -join("")
         }
-        { ($_ -gt 100GB) -and (-not $isRAM) } {
+        { ($_ -ge 100GB) -and (-not $isRAM) } {
             $calculateSize = "{0:F0}" -f ($Size / 1GB)
             Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        { $_ -gt 10GB } {
+        { $_ -ge 10GB } {
             $calculateSize = "{0:F1}" -f ($Size / 1GB)
             Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        { ($_ -gt 1GB) -and (-not $isRAM) } {
+        { ($_ -ge 1GB) -and (-not $isRAM) } {
             $calculateSize = "{0:F2}" -f ($Size / 1GB)
             Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        { $_ -gt 1GB } {
+        { $_ -ge 1GB } {
             $calculateSize = "{0:F1}" -f ($Size / 1GB)
             Return ($calculateSize.ToString(), "GiB") -join("")
         }
-        { $_ -gt 1MB } {
+        { $_ -ge 1MB } {
             $calculateSize = "{0:F0}" -f ($Size / 1MB)
             Return ($calculateSize.ToString(), "MiB") -join("")
         }
-        { $_ -gt 1KB } {
+        { $_ -ge 1KB } {
             $calculateSize = "{0:F0}" -f ($Size / 1KB)
             Return ($calculateSize.ToString(), "KiB") -join("")
         }
