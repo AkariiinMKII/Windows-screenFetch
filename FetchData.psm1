@@ -182,7 +182,7 @@ Function Get-RAM() {
 
     $UsedRamValue = $TotalRamValue - $FreeRamValue
     $UsedRamPercentValue = "{0:F0}" -f (($UsedRamValue / $TotalRamValue) * 100)
-    $UsedRamPercent = ("(", $UsedRamPercentValue.ToString(), "% used)") -join("")
+    $UsedRamPercent = ("(", $UsedRamPercentValue.ToString(), "%)") -join("")
 
     $TotalRam = Format-StorageSize -Size $TotalRamValue -isRAM
     $UsedRam = Format-StorageSize -Size $UsedRamValue -isRAM
@@ -204,7 +204,7 @@ Function Get-Disks() {
         if ($DiskSizeValue -gt 0) {
             $UsedDiskSizeValue = $DiskSizeValue - $FreeDiskSizeValue
             $UsedDiskPercentValue = "{0:F0}" -f (($UsedDiskSizeValue / $DiskSizeValue) * 100)
-            $UsedDiskPercent = ("(", $UsedDiskPercentValue.ToString(), "% used)") -join("")
+            $UsedDiskPercent = ("(", $UsedDiskPercentValue.ToString(), "%)") -join("")
 
             $DiskSize = Format-StorageSize -Size $DiskSizeValue
             $UsedDiskSize = Format-StorageSize -Size $UsedDiskSizeValue

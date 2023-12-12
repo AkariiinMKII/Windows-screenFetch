@@ -13,7 +13,7 @@
 RootModule = 'Windows-screenFetch.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.5.3'
+ModuleVersion = '1.5.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
