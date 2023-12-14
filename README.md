@@ -1,8 +1,8 @@
 # Windows screenFetch
 
-[![License](https://img.shields.io/github/license/AkariiinMKII/Windows-screenFetch?label=License)](https://github.com/AkariiinMKII/Windows-screenFetch/blob/main/LICENSE)
-![Language](https://img.shields.io/badge/Language-PowerShell-blue)
-![Supported Platform](https://img.shields.io/badge/Supported_Platform-Windows_10\/11-blue)
+[![License](https://img.shields.io/github/license/AkariiinMKII/Windows-screenFetch?label=License&color=34D058)](https://github.com/AkariiinMKII/Windows-screenFetch/blob/main/LICENSE)
+![Languages](https://img.shields.io/badge/Languages-PowerShell-blue)
+![Supported OS](https://img.shields.io/badge/Supported_OS-Windows_10\|11-blue)
 ![Repo Size](https://img.shields.io/github/repo-size/AkariiinMKII/Windows-screenFetch?label=Repo%20Size)
 
 ![Windows screenFetch](.screenshots/win10_logo.png)
