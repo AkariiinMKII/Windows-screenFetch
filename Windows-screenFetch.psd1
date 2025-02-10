@@ -13,7 +13,7 @@
 RootModule = 'Windows-screenFetch.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.5.4'
+ModuleVersion = '1.5.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -34,7 +34,7 @@ Copyright = '(c) 2022 AkariiinMKII. All rights reserved.'
 Description = 'A Powershell port of bash/unix screenfetch.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '5.0'
+PowerShellVersion = '5.1'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
