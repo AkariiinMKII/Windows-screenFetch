@@ -30,7 +30,7 @@ Function Get-SystemSpecifications() {
         $RAM
 
     ForEach ($Disk in $Disks) {
-        [void]$SystemInfoCollection.Add(("</Red::Disk />", $Disk) -join(""))
+        [void]$SystemInfoCollection.Add(($(Format-screenFetchData -Data "Disk " -Color Red), $Disk) -join(""))
     }
 
     Return $SystemInfoCollection
@@ -40,29 +40,28 @@ Function Get-LineToTitleMappings() {
     $TitleMappings = @{
         0 = ""
         1 = ""
-        2 = "</Red::OS: />"
-        3 = "</Red::Version: />"
-        4 = "</Red::Uptime: />"
-        5 = "</Red::Shell: />"
-        6 = "</Red::Motherboard: />"
-        7 = "</Red::CPU: />"
-        8 = "</Red::GPU: />"
-        9 = "</Red::Monitor: />"
-        10 = "</Red::NIC: />"
-        11 = "</Red::RAM: />"
+        2 = Format-screenFetchData -Data "OS: " -Color Red
+        3 = Format-screenFetchData -Data "Version: " -Color Red
+        4 = Format-screenFetchData -Data "Uptime: " -Color Red
+        5 = Format-screenFetchData -Data "Shell: " -Color Red
+        6 = Format-screenFetchData -Data "Motherboard: " -Color Red
+        7 = Format-screenFetchData -Data "CPU: " -Color Red
+        8 = Format-screenFetchData -Data "GPU: " -Color Red
+        9 = Format-screenFetchData -Data "Monitor: " -Color Red
+        10 = Format-screenFetchData -Data "NIC: " -Color Red
+        11 = Format-screenFetchData -Data "RAM: " -Color Red
     }
 
     Return $TitleMappings
 }
 
 Function Get-UserInformation() {
-    Return ("</Red::", $env:USERNAME, "/>", "</::@/>", "</Red::", [System.Net.Dns]::GetHostName(), "/>") -join("")
+    Return ($(Format-screenFetchData -Data $env:USERNAME -Color Red), $(Format-screenFetchData -Data "@"), $(Format-screenFetchData -Data $([System.Net.Dns]::GetHostName()) -Color Red)) -join("")
 }
 
 Function Get-DividingLine() {
     $generateDividingLine = "-" * ($env:USERNAME.Length + [System.Net.Dns]::GetHostName().Length + 1)
-
-    Return ("</::", $generateDividingLine, "/>") -join("")
+    Return $(Format-screenFetchData -Data $generateDividingLine)
 }
 
 Function Get-OS() {
@@ -73,7 +72,7 @@ Function Get-OS() {
     )
     $infoOS = ($FetchOS.Caption, $FetchOS.OSArchitecture) -join(" ")
 
-    Return ("</::", $infoOS, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoOS)
 }
 
 Function Get-Version() {
@@ -84,7 +83,7 @@ Function Get-Version() {
     )
     $infoOSVersion = $FetchOS.Version
 
-    Return ("</::", $infoOSVersion, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoOSVersion)
 }
 
 Function Get-SystemUptime() {
@@ -96,33 +95,33 @@ Function Get-SystemUptime() {
     $fetchUptime = (([DateTime]$FetchOS.LocalDateTime) - ([DateTime]$FetchOS.LastBootUpTime))
     $infoUptime = ($fetchUptime.Days.ToString(), "d ", $fetchUptime.Hours.ToString(), "h ", $fetchUptime.Minutes.ToString(), "m ", $fetchUptime.Seconds.ToString(), "s") -join("")
 
-    Return ("</::", $infoUptime, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoUptime)
 }
 
 Function Get-Shell() {
     $infoPSVersion = ("PowerShell", $PSVersionTable.PSVersion.ToString()) -join(" ")
 
-    Return ("</::", $infoPSVersion, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoPSVersion)
 }
 
 Function Get-Mobo() {
     $fetchBaseBoard = Get-CimInstance -ClassName Win32_BaseBoard
     $infoMobo = ($fetchBaseBoard.Manufacturer, $fetchBaseBoard.Product) -join(" ")
 
-    Return ("</::", $infoMobo, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoMobo)
 }
 
 Function Get-CPU() {
     $infoCPU = (Get-CimInstance -ClassName Win32_Processor | ForEach-Object { ($_.Name).Trim(), $(Format-ClockSpeed -Speed $_.MaxClockSpeed) -join(" @ ") }) -join("; ")
 
-    Return ("</::", $infoCPU, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoCPU)
 }
 
 Function Get-GPU() {
     $fetchVC = Get-CimInstance -ClassName Win32_VideoController
     $infoGPU = ($FetchVC | Where-Object { 'OK' -eq $_.Status } | ForEach-Object { ($_.Name).Trim() }) -join("; ")
 
-    Return ("</::", $infoGPU, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoGPU)
 }
 
 Function Get-Monitors() {
@@ -154,7 +153,7 @@ Function Get-Monitors() {
         $infoMonitors = "None"
     }
 
-    Return ("</::", $infoMonitors, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoMonitors)
 }
 
 Function Get-NIC() {
@@ -168,7 +167,7 @@ Function Get-NIC() {
 
     $infoNIC = $Adapters -join("; ")
 
-    Return ("</::", $infoNIC, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoNIC)
 }
 
 Function Get-RAM() {
@@ -189,7 +188,7 @@ Function Get-RAM() {
 
     $infoRAM = ($UsedRam, "/", $TotalRam, $UsedRamPercent) -join(" ")
 
-    Return ("</::", $infoRAM, "/>") -join("")
+    Return $(Format-screenFetchData -Data $infoRAM)
 }
 
 Function Get-Disks() {
@@ -214,15 +213,15 @@ Function Get-Disks() {
             $DiskStatus = "Empty"
         }
 
-        $FormattedDisk = ("</Red::", $selectDisk.DeviceId.ToString(), " />", "</::", $DiskStatus, "/>") -join("")
+        $FormattedDisk = ($(Format-screenFetchData -Data $selectDisk.DeviceId.ToString() -Color Red), $(Format-screenFetchData -Data " $DiskStatus")) -join("")
 
         switch ($selectDisk.DriveType) {
-            0 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Unknown/>") -join("") }
-            1 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: No Root Directory/>") -join("") }
-            2 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Removable Disk/>") -join("") }
-            4 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Network Drive/>") -join("") }
-            5 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: Compact Disc/>") -join("") }
-            6 { $FormattedDisk = ($FormattedDisk, "</DarkGray:: RAM Disk/>") -join("") }
+            0 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " Unknown" -Color DarkGray)) -join("") }
+            1 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " No Root Directory" -Color DarkGray)) -join("") }
+            2 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " Removable Disk" -Color DarkGray)) -join("") }
+            4 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " Network Drive" -Color DarkGray)) -join("") }
+            5 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " Compact Disc" -Color DarkGray)) -join("") }
+            6 { $FormattedDisk = ($FormattedDisk, $(Format-screenFetchData -Data " RAM Disk" -Color DarkGray)) -join("") }
         }
 
         $infoDisks.Add($FormattedDisk)
@@ -298,4 +297,27 @@ Function Format-StorageSize() {
             Return ($Size.ToString(), "Bytes") -join("")
         }
     }
+}
+
+Function Format-screenFetchData() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string] $Data,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [string] $Color
+    )
+
+    $ColorStamp = @(
+        "Black", "DarkRed", "DarkGreen", "DarkYellow", "DarkBlue", "DarkMagenta", "DarkCyan", "Gray",
+        "DarkGray", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"
+    )
+
+    if ($Color -and $ColorStamp -contains $Color) {
+        $Data = ("</$Color::", $Data, "/>") -join("")
+    } else {
+        $Data = ("</::", $Data, "/>") -join("")
+    }
+
+    Return $Data
 }
