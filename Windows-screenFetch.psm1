@@ -24,34 +24,19 @@ Function screenFetch() {
     )
 
     if ($Help) {
-        $generateHelpInfo = @(
-            @{ Parameter = "screenFetch            "; Description = "Print system information with distribution logo." }
-            @{ Parameter = ""; Description = "" }
-            @{ Parameter = "    -Distro <String>"; Description = "Specify the ASCII logo shown in left side." }
-            @{ Parameter = ""; Description = "Currently support the logo of Windows and macOS." }
-            @{ Parameter = ""; Description = "for Windows 10 logo, use 'win10', 'windows10';" }
-            @{ Parameter = ""; Description = "for Windows 11 logo, use 'win11', 'windows11';" }
-            @{ Parameter = ""; Description = "for Windows XP logo, use 'winxp', 'windowsxp', 'xp';" }
-            @{ Parameter = ""; Description = "for macOS logo, use 'mac', 'macos', 'osx', 'apple'." }
-            @{ Parameter = ""; Description = "" }
-            @{ Parameter = "    -Help"; Description = "Print help info." }
-            @{ Parameter = ""; Description = "" }
-            @{ Parameter = "    -Version"; Description = "Print version info." }
-            @{ Parameter = ""; Description = "" }
-            @{ Parameter = "GitHub repository page:"; Description = "https://github.com/AkariiinMKII/Windows-screenFetch" }
-        )
-
-        $HelpInfo = ForEach ($lineHelpInfo in $generateHelpInfo) {
-            New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
-        }
-
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        $screenFetchVersion = New-screenFetchVersion
+        Write-Host $screenFetchVersion
+        Write-Host ""
+        Write-Host "Homepage: https://github.com/AkariiinMKII/Windows-screenFetch"
+        Write-Host ""
+        Write-Host "Usage: screenFetch [-Distro <String>] [-Help] [-Version]"
+        $screenFetchHelp = New-screenFetchHelp
+        Return $screenFetchHelp | Format-Table -HideTableHeaders
     }
 
     if ($Version) {
-        $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object -Property Version).Version
-
-        Return "Windows-screenFetch $VersionInfo"
+        $screenFetchVersion = New-screenFetchVersion
+        Return $screenFetchVersion
     }
 
     $Win10Distro = @("win10", "windows10", "win 10", "windows 10")
@@ -118,6 +103,30 @@ Function screenFetch() {
 
         Write-Host ""
     }
+}
+
+Function New-screenFetchHelp() {
+    $generateHelpInfo = @(
+        @{ Parameter = "-Distro <String>  "; Description = "Specify the ASCII logo shown in left side." }
+        @{ Parameter = ""; Description = "Currently support the logo of Windows and macOS." }
+        @{ Parameter = ""; Description = "for Windows 10 logo, use 'win10', 'windows10';" }
+        @{ Parameter = ""; Description = "for Windows 11 logo, use 'win11', 'windows11';" }
+        @{ Parameter = ""; Description = "for Windows XP logo, use 'winxp', 'windowsxp', 'xp';" }
+        @{ Parameter = ""; Description = "for macOS logo, use 'mac', 'macos', 'osx', 'apple'." }
+        @{ Parameter = "-Help"; Description = "Print help info." }
+        @{ Parameter = "-Version"; Description = "Print version info." }
+    )
+
+    $HelpInfo = ForEach ($lineHelpInfo in $generateHelpInfo) {
+        New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
+    }
+
+    Return $HelpInfo
+}
+
+Function New-screenFetchVersion() {
+    $VersionInfo = (Get-Module -Name Windows-screenFetch | Select-Object -Property Version).Version
+    Return "Windows-screenFetch $VersionInfo"
 }
 
 Set-Alias Windows-screenFetch screenFetch
