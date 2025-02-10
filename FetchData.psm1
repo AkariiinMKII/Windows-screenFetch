@@ -133,7 +133,11 @@ Function Get-Monitors() {
     ForEach ($selectMonitor in $fetchMonitorID) {
         $selectInstanceName = $selectMonitor.InstanceName
 
-        $MonitorName = ($selectMonitor.UserFriendlyName -ne 0 | ForEach-Object { [char]$_ }) -join("")
+        if ([System.Array] -eq ($selectMonitor.UserFriendlyName.GetType()).BaseType) {
+            $MonitorName = ($selectMonitor.UserFriendlyName -ne 0 | ForEach-Object { [char]$_ }) -join("")
+        } else {
+            $MonitorName = "Unknown"
+        }
 
         $pairResolutions = $fetchResolutions | Where-Object { $selectInstanceName -eq $_.InstanceName }
         $supportedResolutions = $pairResolutions.MonitorSourceModes | Select-Object HorizontalActivePixels, VerticalActivePixels, VerticalRefreshRateNumerator, VerticalRefreshRateDenominator
@@ -307,7 +311,6 @@ Function Format-screenFetchData() {
         [Parameter(Mandatory = $false, Position = 1)]
         [string] $Color
     )
-
     $ColorStamp = @(
         "Black", "DarkRed", "DarkGreen", "DarkYellow", "DarkBlue", "DarkMagenta", "DarkCyan", "Gray",
         "DarkGray", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"
