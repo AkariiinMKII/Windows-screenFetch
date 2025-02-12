@@ -133,7 +133,7 @@ Function Get-Monitors() {
     ForEach ($selectMonitor in $fetchMonitorID) {
         $selectInstanceName = $selectMonitor.InstanceName
 
-        if ([System.Array] -eq ($selectMonitor.UserFriendlyName.GetType()).BaseType) {
+        if ($selectMonitor.UserFriendlyName -and [System.Array] -eq ($selectMonitor.UserFriendlyName.GetType()).BaseType) {
             $MonitorName = ($selectMonitor.UserFriendlyName -ne 0 | ForEach-Object { [char]$_ }) -join("")
         } else {
             $MonitorName = "Unknown"
