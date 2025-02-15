@@ -62,7 +62,7 @@ Function screenFetch() {
     $SystemInfoCollection = . Get-SystemSpecifications
     $LineToTitleMappings = . Get-LineToTitleMappings
 
-    $Regex = [regex] "\<\/(\w*)::(.+?)\/\>"
+    $Regex = [regex]"\<\/(\w*)::(.+?)\/\>"
     $ColorStamp = @(
         "Black", "DarkRed", "DarkGreen", "DarkYellow", "DarkBlue", "DarkMagenta", "DarkCyan", "Gray",
         "DarkGray", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"
@@ -73,7 +73,7 @@ Function screenFetch() {
         if (0 -eq $AsciiArt[$numLine].Length) {
             Write-Host (" " * 40) -NoNewline
         } else {
-            Write-Host $AsciiArt[$numLine] -ForegroundColor Cyan -NoNewline
+            Write-Host $AsciiArt[$numLine] -ForegroundColor DarkCyan -NoNewline
         }
 
         $contentLine = ($LineToTitleMappings[$numLine], $SystemInfoCollection[$numLine]) -join("")
