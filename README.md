@@ -6,9 +6,8 @@
 ![Require Shell](https://img.shields.io/badge/Require_Shell-PowerShell_5.1\|7-blue)
 ![Repo Size](https://img.shields.io/github/repo-size/AkariiinMKII/Windows-screenFetch?label=Repo%20Size)
 
-![Windows screenFetch](.screenshots/win10_logo.png)
-
-_Original by [JulianChow94](https://github.com/JulianChow94/Windows-screenFetch), modified in this repo._
+![Windows screenFetch](.screenshots/sample_win10_logo.png)
+_`screenFetch` in Windows Terminal with [Dracula](https://draculatheme.com/windows-terminal) theme._
 
 > ## ScreenFetch
 >
@@ -73,9 +72,9 @@ _Print system information with distribution logo._
 - For Windows XP logo, use `winxp`, `windowsxp`, `xp`
 - For macOS logo, use `mac`, `macos`, `osx`, `apple`
 
-![Windows 11 logo](.screenshots/win11_logo.png)
-![Windows XP logo](.screenshots/winxp_logo.png)
-![macOS logo](.screenshots/macos_logo.png)
+![Windows 11 logo](.screenshots/sample_win11_logo.png)
+![Windows XP logo](.screenshots/sample_winxp_logo.png)
+![macOS logo](.screenshots/sample_macos_logo.png)
 
 ## Troubleshooting
 
