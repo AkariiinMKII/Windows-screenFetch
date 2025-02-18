@@ -65,12 +65,12 @@ _Print system information with distribution logo._
 |`Help`|Switch|&cross;|Print help info.|
 |`Version`|Switch|&cross;|Print version info.|
 
-[1] Currently support the logo of Windows and macOS, please see `AsciiArtGenerator` for possible extensions
+[1] Currently support the logo of Windows and macOS, please see `AsciiArtGenerator` for possible extensions.
 
-- For Windows 10 logo, use `win10`, `windows10`
-- For Windows 11 logo, use `win11`, `windows11`
-- For Windows XP logo, use `winxp`, `windowsxp`, `xp`
-- For macOS logo, use `mac`, `macos`, `osx`, `apple`
+- For Windows 10 logo, use `win10`, `windows10`.
+- For Windows 11 logo, use `win11`, `windows11`.
+- For Windows XP logo, use `winxp`, `windowsxp`, `xp`.
+- For macOS logo, use `mac`, `macos`, `osx`, `apple`.
 
 ![Windows 11 logo](.screenshots/sample_win11_logo.png)
 ![Windows XP logo](.screenshots/sample_winxp_logo.png)
