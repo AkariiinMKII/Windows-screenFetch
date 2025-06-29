@@ -76,17 +76,6 @@ _Print system information with distribution logo._
 ![Windows XP logo](.screenshots/sample_winxp_logo.png)
 ![macOS logo](.screenshots/sample_macos_logo.png)
 
-## Troubleshooting
-
-If you have followed the installation steps but you're getting the following error:
-
-```PowerShell
-The file C:\<yourpath>\screenfetch.ps1 is not digitally signed.
-The script will not execute on the system.
-```
-
-A common fix is to run the PowerShell command `Set-ExecutionPolicy Unrestricted` in a shell with administrative privileges.
-
 ## Known issues
 
 - Cannot detect attached monitors. [(#8)](https://github.com/AkariiinMKII/Windows-screenFetch/issues/8)
